@@ -4,10 +4,14 @@ Create test input and golden output files for HLS testbench using actual PyTorch
 """
 
 import os
+import sys
 import torch
 import torch.nn as nn
 import numpy as np
 from pathlib import Path
+
+# Change to this script's directory so relative paths always work
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # VGG Block definition exactly as in vgg_training.ipynb
 class VGGBlock(nn.Module):

@@ -5,8 +5,12 @@ Reads from params_int32/ and writes to params/
 """
 import struct
 import os
+import sys
 from pathlib import Path
 import numpy as np
+
+# Change to this script's directory so relative paths always work
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def read_int32_bin(filename):
     """Read INT32 binary file"""
