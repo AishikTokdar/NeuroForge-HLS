@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "tiled_conv.hpp"
+#include "utils.hpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -219,7 +220,7 @@ int main()
 
     mse = mse / OUTPUT_SIZE;
 
-    float expected_accuracy = 85.59;  // INT32 quantization accuracy
+    float expected_accuracy = 85.59;  // INT16 fixed-point (ap_fixed<16,12>) quantization accuracy
 
     std::cout << "\n========================================" << std::endl;
     std::cout << "Performance Metrics" << std::endl;
@@ -227,7 +228,7 @@ int main()
     std::cout << "MSE:              " << mse << std::endl;
     std::cout << "Error count:      " << error_count << "/" << OUTPUT_SIZE << std::endl;
     std::cout << "Expected Accuracy: " << expected_accuracy << "%" << std::endl;
-    std::cout << "Model:            Reduced VGG (INT32 quantized)" << std::endl;
+    std::cout << "Model:            Reduced VGG (INT16 fixed-point, ap_fixed<16,12>)" << std::endl;
     std::cout << "Parameters:       1,439,146" << std::endl;
 
     std::cout << "\n========================================" << std::endl;

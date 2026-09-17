@@ -86,17 +86,8 @@ void batch_norm_relu_layer(
 	fm_t *output_fm,
 	int M, int I);
 
-void max_pool_2x2(
-	fm_t *input_fm,
-	fm_t *output_fm,
-	int M, int I, int O);
-
-void fully_connected_layer(
-	fm_t *input_fm,
-	wt_t *weights,
-	wt_t *biases,
-	fm_t *output_fm,
-	int IN_SIZE, int OUT_SIZE);
+// NOTE: max_pool_2x2 and fully_connected_layer are declared in utils.hpp
+//       and implemented in utils.cpp. Include utils.hpp for those prototypes.
 
 #endif
 

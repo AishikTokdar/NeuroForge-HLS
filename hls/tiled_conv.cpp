@@ -4,6 +4,7 @@
  */
 
 #include "tiled_conv.hpp"
+#include "utils.hpp"
 
 void reduced_vgg_inference(
     fm_t *input_fm,
