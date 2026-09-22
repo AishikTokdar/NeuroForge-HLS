@@ -19,7 +19,23 @@ SYN_REPORT = $(PROJECT)/$(SOLUTION)/syn/report
 VIVADO_PRJ = vivado_project
 BITSTREAM = $(VIVADO_PRJ)/$(VIVADO_PRJ).runs/impl_1/design_1_wrapper.bit
 
-.PHONY: all clean help csim csynth ip vivado bitstream reports
+.PHONY: all clean help csim csynth ip vivado bitstream reports sim_gcc
+
+# ============================================================================
+# OPEN-SOURCE TOOLCHAIN TARGETS (FREE ALTERNATIVE TO Vitis/Vivado)
+# ============================================================================
+
+sim_gcc:
+	@echo "=========================================="
+	@echo "Running Open-Source C++ Simulation (GCC)..."
+	@echo "=========================================="
+	g++ -O3 -DNO_HLS tb_conv.cpp tiled_conv.cpp utils.cpp -o sim
+ifeq ($(OS),Windows_NT)
+	sim.exe
+else
+	./sim
+endif
+	@echo "✅ GCC Functional Simulation Complete!"
 
 # ============================================================================
 # MAIN TARGETS
@@ -98,7 +114,7 @@ clean:
 	rm -rf $(PROJECT)
 	rm -rf $(VIVADO_PRJ)
 	rm -rf *.log *.jou .Xil
-	rm -rf vivado*.str
+	rm -rf vivado*.str sim sim.exe
 	@echo "✅ Clean complete"
 
 help:
