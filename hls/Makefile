@@ -19,7 +19,7 @@ SYN_REPORT = $(PROJECT)/$(SOLUTION)/syn/report
 VIVADO_PRJ = vivado_project
 BITSTREAM = $(VIVADO_PRJ)/$(VIVADO_PRJ).runs/impl_1/design_1_wrapper.bit
 
-.PHONY: all clean help csim csynth ip vivado bitstream reports sim_gcc
+.PHONY: all clean help csim csynth ip vivado bitstream reports sim_gcc bambu
 
 # ============================================================================
 # OPEN-SOURCE TOOLCHAIN TARGETS (FREE ALTERNATIVE TO Vitis/Vivado)
@@ -36,6 +36,15 @@ else
 	./sim
 endif
 	@echo "✅ GCC Functional Simulation Complete!"
+
+bambu:
+	@echo "=========================================="
+	@echo "Running Bambu Open-Source HLS (C++ to Verilog)..."
+	@echo "=========================================="
+	@echo "NOTE: Run 'make sim_gcc' first to verify functional correctness"
+	bambu --top-fname=reduced_vgg_inference --clock-period=15 -I. tiled_conv.cpp utils.cpp -DNO_HLS
+	@echo "✅ Open-Source HLS Synthesis Complete (Verilog generated!)"
+
 
 # ============================================================================
 # MAIN TARGETS
