@@ -1,0 +1,11 @@
+# Yosys open-source synthesis script for Xilinx 7-series
+read_verilog reduced_vgg_inference.v
+hierarchy -top reduced_vgg_inference
+proc
+opt
+fsm
+opt
+memory
+opt
+synth_xilinx -family xc7 -top reduced_vgg_inference
+stat -json
