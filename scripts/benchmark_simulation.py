@@ -19,7 +19,10 @@ def benchmark_simulation(runs=5):
             latencies.append(dt)
             print(f"Run {i+1}: {dt:.2f} ms")
     if latencies:
-        print(f"Mean Latency: {np.mean(latencies):.2f} ms | Min: {np.min(latencies):.2f} ms")
+        mean_l = np.mean(latencies)
+        min_l = np.min(latencies)
+        print(f"Mean Latency: {mean_l:.2f} ms | Min: {min_l:.2f} ms")
+        print(f"Estimated Hardware Clock Cycles (@ 66.7MHz): {int(mean_l * 66700)}")
 
 if __name__ == "__main__":
     benchmark_simulation()
