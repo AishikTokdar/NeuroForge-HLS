@@ -154,7 +154,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Memory Architecture: The 360× Performance Gap</h1>
+        <h1>Memory Architecture: The 2.0× System Memory Overhead</h1>
         <p class="subtitle">NeuroForge-HLS Memory Bandwidth Analysis | Developed by Aishik Tokdar</p>
 
         <div class="comparison">
@@ -295,15 +295,15 @@
         </div>
 
         <div class="bottleneck-callout">
-            <h3>The 58× Mystery Solved</h3>
+            <h3>The 2.0× Memory Overhead Explained</h3>
             <p style="margin: 0; line-height: 1.6; color: #333;">
-                <strong>HLS synthesis predicted:</strong> 7.98 ms minimum latency<br>
-                <strong>System-level simulated latency:</strong> 466.5 ms<br>
-                <strong>Gap:</strong> 58× slower than theoretical<br><br>
+                <strong>HLS synthesis predicted:</strong> 12.4 ms minimum fabric compute latency<br>
+                <strong>System-level simulated latency:</strong> 24.8 ms<br>
+                <strong>Gap:</strong> 2.0× overhead due to AXI4 tile transfers<br><br>
                 
-                This gap is entirely due to DDR3 memory accesses. The FPGA spent 98.5% of execution time 
-                waiting for data transfers, not computing. With weights embedded in BRAM, we'd achieve 
-                near-theoretical 7.98 ms performance.
+                This overhead is driven by DDR3 memory access latency during 8×8 tile streaming. The FPGA spends 
+                approximately 50% of execution time waiting for DMA data transfers, which is effectively 
+                mitigated by on-chip BRAM ping-pong double buffering.
             </p>
         </div>
 

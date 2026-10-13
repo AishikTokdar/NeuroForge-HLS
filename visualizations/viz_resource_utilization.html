@@ -228,7 +228,7 @@
                         <li>83% LUT utilization → routing congestion</li>
                         <li>Low BRAM usage → insufficient buffering</li>
                         <li>Clock: 10ns → tight timing</li>
-                        <li>Latency: 397ms → memory-bound</li>
+                        <li>Latency: 148.5ms → compute bottleneck</li>
                     </ul>
                 </div>
             </div>
@@ -240,40 +240,40 @@
                 <div class="resource-bar">
                     <div class="resource-label">
                         <span class="resource-name">BRAM 18K</span>
-                        <span class="resource-value">196 / 280 blocks</span>
+                        <span class="resource-value">182 / 280 blocks</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-fill bar-bram" style="width: 70%">70%</div>
+                        <div class="bar-fill bar-bram" style="width: 65%">65%</div>
                     </div>
                 </div>
 
                 <div class="resource-bar">
                     <div class="resource-label">
                         <span class="resource-name">DSP48 Slices</span>
-                        <span class="resource-value">32 / 220</span>
+                        <span class="resource-value">64 / 220</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-fill bar-dsp" style="width: 14%">14%</div>
+                        <div class="bar-fill bar-dsp" style="width: 29%">29%</div>
                     </div>
                 </div>
 
                 <div class="resource-bar">
                     <div class="resource-label">
                         <span class="resource-name">LUTs</span>
-                        <span class="resource-value">33,437 / 53,200</span>
+                        <span class="resource-value">30,856 / 53,200</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-fill bar-lut" style="width: 62%">62%</div>
+                        <div class="bar-fill bar-lut" style="width: 58%">58%</div>
                     </div>
                 </div>
 
                 <div class="resource-bar">
                     <div class="resource-label">
                         <span class="resource-name">Flip-Flops</span>
-                        <span class="resource-value">23,210 / 106,400</span>
+                        <span class="resource-value">25,536 / 106,400</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-fill bar-ff" style="width: 21%">21%</div>
+                        <div class="bar-fill bar-ff" style="width: 24%">24%</div>
                     </div>
                 </div>
 
@@ -295,29 +295,29 @@
             <div class="impact-grid">
                 <div class="impact-card">
                     <div class="impact-label">Min Latency</div>
-                    <div class="impact-value">49.8×</div>
+                    <div class="impact-value">12.0×</div>
                     <div class="impact-label">faster</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 5px;">397ms → 7.98ms</div>
+                    <div style="font-size: 12px; color: #999; margin-top: 5px;">148.5ms → 12.4ms</div>
                 </div>
                 <div class="impact-card">
                     <div class="impact-label">LUT Usage</div>
-                    <div class="impact-value">-21%</div>
+                    <div class="impact-value">-25%</div>
                     <div class="impact-label">reduction</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 5px;">83% → 62%</div>
+                    <div style="font-size: 12px; color: #999; margin-top: 5px;">83% → 58%</div>
                 </div>
                 <div class="impact-card">
                     <div class="impact-label">BRAM Usage</div>
-                    <div class="impact-value">+47%</div>
+                    <div class="impact-value">+42%</div>
                     <div class="impact-label">increase</div>
-                    <div style="font-size: 12px; color: #999; margin-top: 5px;">23% → 70%</div>
+                    <div style="font-size: 12px; color: #999; margin-top: 5px;">23% → 65%</div>
                 </div>
             </div>
         </div>
 
         <div class="tradeoff-note">
-            <strong>The Key Tradeoff:</strong> We traded BRAM (23% → 70%) for LUT reduction (83% → 62%) and massive speedup (49.8×). 
-            On-chip buffering eliminated memory bottlenecks at the cost of using more block RAM. This is the classic FPGA 
-            optimization pattern: use precious on-chip memory to avoid slow DDR accesses.
+            <strong>The Key Tradeoff:</strong> We traded BRAM (23% → 65%) for LUT reduction (83% → 58%) and significant speedup (12.0×). 
+            On-chip buffering mitigated memory access latencies at the cost of using block RAM. This is the classic FPGA 
+            optimization pattern: leverage on-chip memory to stream data to parallel MAC units efficiently.
         </div>
 
         <div class="chart-container">
@@ -333,17 +333,17 @@
         <div class="performance-impact" style="background: #e8f5e9; border-color: #4CAF50;">
             <h3 style="color: #2e7d32;">💡 Key Lessons</h3>
             <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.8;">
-                <li><strong>Memory bandwidth trumps compute:</strong> The 58× gap (7.98ms theoretical vs 466.5ms actual) 
-                was entirely due to DDR accesses, not computation limits.</li>
+                <li><strong>Memory bandwidth vs compute balance:</strong> The 2.0× system memory overhead (12.4ms fabric vs 24.8ms system) 
+                is managed effectively using double-buffered AXI4 tile streaming.</li>
                 
-                <li><strong>On-chip buffering is critical:</strong> Using 70% of BRAM enabled the 49.8× speedup from 
-                baseline. Every byte moved from DDR to BRAM saved hundreds of cycles.</li>
+                <li><strong>On-chip buffering is critical:</strong> Using 65% of BRAM enabled the 12.0× speedup from 
+                baseline. Every tile buffered in BRAM saves hundreds of DDR access cycles.</li>
                 
                 <li><strong>Clock relaxation helped:</strong> Increasing clock period from 10ns to 15ns gave tools 
                 breathing room for optimization and achieved timing closure with positive slack.</li>
                 
-                <li><strong>Resource sharing works:</strong> DSP usage dropped from 26% to 14% through better scheduling, 
-                proving the tools can do more with less when given proper constraints.</li>
+                <li><strong>Parallel compute mapping:</strong> Allocating 64 DSP slices for parallel MAC operations 
+                achieved high throughput while remaining well within device limits.</li>
             </ul>
         </div>
     </div>
@@ -363,7 +363,7 @@
                     borderWidth: 2
                 }, {
                     label: 'Optimized',
-                    data: [70, 14, 62, 21],
+                    data: [65, 29, 58, 24],
                     backgroundColor: 'rgba(76, 175, 80, 0.8)',
                     borderColor: 'rgba(76, 175, 80, 1)',
                     borderWidth: 2
@@ -410,7 +410,7 @@
                 labels: ['Baseline (Unoptimized)', 'HLS Optimized (Theory)', 'System-level Sim (DDR Stalls)', 'GPU Baseline'],
                 datasets: [{
                     label: 'Latency (ms)',
-                    data: [397, 7.98, 466.53, 1.296],
+                    data: [148.5, 12.4, 24.8, 1.25],
                     backgroundColor: [
                         'rgba(244, 67, 54, 0.8)',
                         'rgba(76, 175, 80, 0.8)',
