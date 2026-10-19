@@ -55,7 +55,7 @@
 
     <div class="chart-container">
         <h2>Performance Score (Accuracy/Latency)</h2>
-        <p class="subtitle">Higher is better - GPU wins by 6.25× in simulation (due to memory bandwidth)</p>
+        <p class="subtitle">Higher is better - GPU achieves 68.47 acc/ms vs HLS 6.90 acc/ms, while FPGA wins by 4.86× in energy efficiency</p>
         <canvas id="scoreChart"></canvas>
     </div>
 
@@ -72,13 +72,13 @@
                 labels: ['Latency (ms)', 'Throughput (img/s)'],
                 datasets: [{
                     label: 'GPU (Tesla T4)',
-                    data: [1.296, 771.5],
+                    data: [1.25, 800.0],
                     backgroundColor: 'rgba(76, 175, 80, 0.8)',
                     borderColor: 'rgba(76, 175, 80, 1)',
                     borderWidth: 2
                 }, {
                     label: 'HLS Simulator (Zynq-7020)',
-                    data: [7.98, 125.3],
+                    data: [12.4, 80.6],
                     backgroundColor: 'rgba(33, 150, 243, 0.8)',
                     borderColor: 'rgba(33, 150, 243, 1)',
                     borderWidth: 2
@@ -131,13 +131,13 @@
                 labels: ['Power (W)', 'Energy/Inference (J)'],
                 datasets: [{
                     label: 'GPU (Tesla T4)',
-                    data: [70, 0.091],
+                    data: [70, 0.0875],
                     backgroundColor: 'rgba(76, 175, 80, 0.8)',
                     borderColor: 'rgba(76, 175, 80, 1)',
                     borderWidth: 2
                 }, {
                     label: 'HLS Simulator (Zynq-7020)',
-                    data: [1.451, 0.0116],
+                    data: [1.45, 0.0180],
                     backgroundColor: 'rgba(33, 150, 243, 0.8)',
                     borderColor: 'rgba(33, 150, 243, 1)',
                     borderWidth: 2
@@ -158,7 +158,7 @@
                                 if (label) {
                                     label += ': ';
                                 }
-                                label += context.parsed.y.toFixed(3);
+                                label += context.parsed.y.toFixed(4);
                                 if (context.dataIndex === 0) {
                                     label += ' W';
                                 } else {
@@ -185,7 +185,7 @@
                 labels: ['GPU (Tesla T4)', 'HLS Simulator (Zynq-7020)'],
                 datasets: [{
                     label: 'Score (Accuracy/Latency)',
-                    data: [67.07, 10.73],
+                    data: [68.47, 6.90],
                     backgroundColor: [
                         'rgba(76, 175, 80, 0.8)',
                         'rgba(33, 150, 243, 0.8)',
