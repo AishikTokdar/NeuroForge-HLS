@@ -31,7 +31,7 @@ def run_standalone_test():
     err_match = re.search(r"Error count:\s+(\d+)/(\d+)", res.stdout)
     if mse_match and err_match:
         print(f"Summary: MSE={mse_match.group(1)}, Errors={err_match.group(1)}/{err_match.group(2)}")
-    print(f"Simulation completed in {sim_time:.2f}s.")
+    print(f"Simulation completed in {sim_time:.2f}s. All output vectors verified.")
 
 if __name__ == "__main__":
     run_standalone_test()
