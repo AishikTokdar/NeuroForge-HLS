@@ -1,122 +1,318 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge-HLS - Visualizations</title>
+    <title>NeuroForge-HLS - Simulation & Modeling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            /* Accents */
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-rose: #f43f5e;
+            --accent-teal: #14b8a6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.6;
-            background: #f5f5f5;
+            -webkit-font-smoothing: antialiased;
         }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h1 { color: #1a1a1a; margin-top: 0; }
-        .subtitle { color: #666; margin-bottom: 30px; }
-        .viz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .viz-card {
-            background: #fafafa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .viz-card:hover {
-            transform: translateY(-2px);
-            border-color: #2196F3;
-        }
-        .viz-card h3 {
-            margin-top: 0;
-            color: #2196F3;
-        }
-        .viz-card a {
-            color: #2196F3;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .viz-card a:hover {
-            text-decoration: underline;
-        }
-        .viz-description {
-            color: #666;
-            font-size: 14px;
-            margin: 10px 0;
-        }
-        .github-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #24292e;
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
+            padding: 100px 20px 120px;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
         }
-        .github-link:hover {
-            background: #0366d6;
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: -60px auto 80px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 40px 0 24px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header span {
+            font-size: 1.75rem;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+        }
+
+        /* Visualization Cards */
+        .viz-card .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .viz-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .viz-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            flex-grow: 1;
+            margin-bottom: 24px;
+        }
+
+        .card-link {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card:hover .card-link {
+            color: var(--primary-hover);
+        }
+
+        .card-link::after {
+            content: '→';
+            transition: transform 0.2s;
+        }
+
+        .card:hover .card-link::after {
+            transform: translateX(4px);
+        }
+
+        /* Tool Cards */
+        .tool-card {
+            border-left: 4px solid var(--primary);
+        }
+        .tool-python { border-left-color: var(--accent-green); }
+        .tool-gcc { border-left-color: var(--accent-orange); }
+        .tool-bambu { border-left-color: var(--accent-purple); }
+        .tool-yosys { border-left-color: var(--accent-rose); }
+        .tool-verilator { border-left-color: var(--accent-teal); }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .tool-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* CTA Button */
+        .github-cta {
+            display: flex;
+            justify-content: center;
+            margin: 60px 0;
+        }
+
+        .btn-github {
+            background-color: #24292e;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-github:hover {
+            background-color: #000000;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background: white;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        footer strong {
+            color: var(--text-main);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 NeuroForge-HLS</h1>
-        <p class="subtitle">Interactive visualizations for software simulation and modeling of a VGG accelerator on CIFAR-10</p>
-        
-        <div class="viz-grid">
-            <div class="viz-card">
-                <h3>📊 Performance Comparison</h3>
-                <p class="viz-description">GPU vs HLS Simulation metrics: latency, throughput, power, and energy efficiency</p>
-                <a href="visualizations/viz_performance_comparison.html">View Visualization →</a>
-            </div>
-            
-            <div class="viz-card">
-                <h3>🧠 Memory Architecture</h3>
-                <p class="viz-description">Deep dive into why GPU's 320 GB/s bandwidth compares to simulated FPGA's 2.1 GB/s</p>
-                <a href="visualizations/viz_memory_architecture.html">View Visualization →</a>
-            </div>
-            
-            <div class="viz-card">
-                <h3>🎯 Decision Framework</h3>
-                <p class="viz-description">Interactive guide for choosing GPU vs FPGA for your ML project</p>
-                <a href="visualizations/viz_decision_framework.html">View Visualization →</a>
-            </div>
-            
-            <div class="viz-card">
-                <h3>⚙️ Resource Optimization</h3>
-                <p class="viz-description">How HLS synthesis optimized resources to achieve 49.8× theoretical speedup</p>
-                <a href="visualizations/viz_resource_utilization.html">View Visualization →</a>
-            </div>
-            
-            <div class="viz-card">
-                <h3>🛠️ Design Workflow</h3>
-                <p class="viz-description">4-stage simulation workflow from training to HLS synthesis modeling</p>
-                <a href="visualizations/viz_design_workflow.html">View Visualization →</a>
-            </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>NeuroForge-HLS</h1>
+            <p>Interactive visualizations and software documentation for modeling a custom VGG accelerator on CIFAR-10.</p>
         </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
         
-        <a href="https://github.com/AishikTokdar/NeuroForge-HLS" class="github-link">
-            📦 View Full Project on GitHub
-        </a>
-        
-        <p style="margin-top: 30px; color: #666; font-size: 14px;">
-            <strong>Project:</strong> NeuroForge-HLS: Software Simulation and Modeling of a VGG-16 Accelerator<br>
-            <strong>Author:</strong> Aishik Tokdar<br>
-            <strong>Project Type:</strong> Software Simulation & Hardware Modeling
-        </p>
-    </div>
+        <!-- Visualizations Section -->
+        <h2 class="section-header"><span>📊</span> Interactive Visualizations</h2>
+        <div class="grid">
+            <a href="visualizations/viz_performance_comparison.html" class="card viz-card">
+                <div class="card-icon">🚀</div>
+                <h3>Performance Comparison</h3>
+                <p>GPU vs HLS Simulation metrics: latency, throughput, power, and energy efficiency.</p>
+                <span class="card-link">Explore Metrics</span>
+            </a>
+
+            <a href="visualizations/viz_memory_architecture.html" class="card viz-card">
+                <div class="card-icon">🧠</div>
+                <h3>Memory Architecture</h3>
+                <p>Deep dive into why GPU's 320 GB/s bandwidth compares to simulated FPGA's 2.1 GB/s.</p>
+                <span class="card-link">Analyze Memory</span>
+            </a>
+
+            <a href="visualizations/viz_decision_framework.html" class="card viz-card">
+                <div class="card-icon">🎯</div>
+                <h3>Decision Framework</h3>
+                <p>Interactive guide for choosing GPU vs FPGA for your Machine Learning project.</p>
+                <span class="card-link">View Framework</span>
+            </a>
+
+            <a href="visualizations/viz_resource_utilization.html" class="card viz-card">
+                <div class="card-icon">⚙️</div>
+                <h3>Resource Optimization</h3>
+                <p>How HLS synthesis optimized hardware resources to achieve a 12.0× theoretical speedup.</p>
+                <span class="card-link">See Resources</span>
+            </a>
+
+            <a href="visualizations/viz_design_workflow.html" class="card viz-card">
+                <div class="card-icon">🛠️</div>
+                <h3>Design Workflow</h3>
+                <p>4-stage software simulation workflow from PyTorch training to HLS synthesis modeling.</p>
+                <span class="card-link">View Workflow</span>
+            </a>
+        </div>
+
+        <div class="github-cta">
+            <a href="https://github.com/AishikTokdar/NeuroForge-HLS" class="btn-github">
+                <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                View Full Project on GitHub
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Project:</strong> NeuroForge-HLS: Software Simulation and Modeling of a VGG-16 Accelerator</p>
+        <p><strong>Author:</strong> Aishik Tokdar</p>
+        <p style="margin-top: 16px; font-size: 0.85rem; color: #94a3b8;">&copy; 2026. Released under the MIT License.</p>
+    </footer>
+
 </body>
 </html>
