@@ -296,6 +296,54 @@
             </a>
         </div>
 
+        <!-- Open Source Tools Section -->
+        <h2 class="section-header" style="margin-top: 60px;"><span>🧩</span> Open-Source Toolchain</h2>
+        <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.05rem;">
+            NeuroForge-HLS can be deployed and validated using a completely free, 100% open-source software toolchain stack.
+        </p>
+
+        <div class="grid">
+            <div class="card tool-card tool-python">
+                <div class="tool-header">
+                    <h3 class="tool-title">Python 3.8+</h3>
+                    <span class="badge">Training</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Used with PyTorch for CNN model training, quantization, and INT16 weight export.</p>
+            </div>
+
+            <div class="card tool-card tool-gcc">
+                <div class="tool-header">
+                    <h3 class="tool-title">GCC / MinGW</h3>
+                    <span class="badge">Simulation</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Performs bit-accurate C++ functional hardware simulation without requiring Vitis HLS.</p>
+            </div>
+
+            <div class="card tool-card tool-bambu">
+                <div class="tool-header">
+                    <h3 class="tool-title">Bambu HLS</h3>
+                    <span class="badge">Synthesis</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Open-source High-Level Synthesis (HLS) compiler for translating C/C++ to Verilog RTL.</p>
+            </div>
+
+            <div class="card tool-card tool-yosys">
+                <div class="tool-header">
+                    <h3 class="tool-title">Yosys</h3>
+                    <span class="badge">Logic Synthesis</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Open-source Verilog RTL logic synthesizer and gate-level resource modeling suite.</p>
+            </div>
+
+            <div class="card tool-card tool-verilator">
+                <div class="tool-header">
+                    <h3 class="tool-title">Verilator</h3>
+                    <span class="badge">Verification</span>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">High-speed open-source cycle-accurate Verilog-to-C++ simulator for RTL verification.</p>
+            </div>
+        </div>
+
         <div class="github-cta">
             <a href="https://github.com/AishikTokdar/NeuroForge-HLS" class="btn-github">
                 <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">

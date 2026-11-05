@@ -15,4 +15,10 @@
 * **System-Level Simulation (DDR3 Stalls)**: 24.8 ms (40.3 img/s)
 * **Memory Stalling Ratio**: 2.0x overhead (mitigated by double-buffered AXI4 ping-pong streaming)
 * **Baseline Latency (Unoptimized)**: 148.5 ms (12.0x speedup achieved)
-* **Total Power Consumption**: 1.45 W
+* **Total Power Consumption**: 1.45 W (Vivado XPE modeled)
+
+### Verified Toolchains
+1. **Xilinx Vitis HLS 2022.2**: C-Simulation and Vivado IP generation.
+2. **GCC 11+ / MinGW-w64**: Bit-accurate C++ execution with `-DNO_HLS`.
+3. **PandA / Bambu 2023**: Open-source C++ to Verilog RTL synthesis.
+4. **Yosys 0.30+**: Technology mapping and logic optimization.
