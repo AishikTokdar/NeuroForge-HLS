@@ -18,12 +18,13 @@ NeuroForge-HLS is an end-to-end software-based hardware emulation and High-Level
 4. [Performance & Resource Summary](#-performance--resource-summary)
 5. [Interactive Visualizations](#-interactive-visualizations)
 6. [Project Structure](#-project-structure)
-7. [Windows Setup & Execution Guide](#-windows-setup--execution-guide)
-8. [Linux Setup & Execution Guide](#-linux-setup--execution-guide)
+7. [Software Toolchain Options](#-software-toolchain-options)
+8. [Setup & Execution Guide](#-setup--execution-guide)
 9. [Verification & Validation](#-verification--validation)
 10. [License & Contact](#-license--contact)
 
 ---
+
 
 ## 🏗️ Architectural Deep Dive
 
@@ -39,12 +40,12 @@ To make CNN inference feasible on resource-constrained target devices (like the 
 * **Total Parameters**: 1,439,146 parameters (1.44M), achieving **86.94% accuracy** on the GPU in floating-point.
 
 ### 2. Quantization Strategy (INT16 Fixed-Point)
-Floating-point calculations ($float32$) are computationally expensive and consume large multipliers in hardware. NeuroForge-HLS maps these weights and activations into bit-accurate fixed-point representations using the Xilinx arbitrary precision library (`ap_fixed`):
+Floating-point calculations (`float32`) are computationally expensive and consume large multipliers in hardware. NeuroForge-HLS maps these weights and activations into bit-accurate fixed-point representations using the Xilinx arbitrary precision library (`ap_fixed`):
 * **`fm_t` (Feature Maps)**: `ap_fixed<16, 12>` (16 total bits, 12 integer bits, 4 fractional bits).
 * **`wt_t` (Weights/Biases)**: `ap_fixed<16, 12>` (16 total bits, 12 integer bits, 4 fractional bits).
 * **`acc_t` (Accumulators)**: `ap_fixed<32, 24>` (32 total bits, 24 integer bits, 8 fractional bits to prevent accumulator overflow).
 
-This INT16 representation maintains accuracy at **85.59%** (only $1.35\%$ loss compared to $float32$) while reducing memory storage by 2×.
+This INT16 representation maintains accuracy at **85.59%** (only $1.35\%$ loss compared to `float32`) while reducing memory storage by 2×.
 
 ### 3. Tiling Strategy
 Due to the limited on-chip Block RAM (BRAM) capacity of edge devices (560 KB on Zynq-7020), loading entire feature maps into the hardware fabric is impossible. NeuroForge-HLS implements **8x8 Tiled Convolution**:
@@ -73,13 +74,13 @@ Enables task-level pipelining. Instead of completing the entire convolution befo
 
 ## 🎯 Key Achievements
 
-- 🚀 **Optimized Execution**: Achieved a simulated execution time of **7.98 ms** per image (125.3 img/s throughput) in the optimized C++ design.
-- 📉 **49.8× Latency Speedup**: Loop pipelining and tiling reduced baseline latency from 397 ms down to 7.98 ms.
+- 🚀 **Optimized Execution**: Achieved a simulated execution time of **12.4 ms** per image (80.6 img/s throughput) in the optimized C++ hardware model.
+- 📉 **12.0× Latency Speedup**: Loop pipelining and tiling reduced baseline latency from 148.5 ms down to 12.4 ms.
 - 💾 **Optimal Resource Utilization**: Fits comfortably inside a Zynq-7020 footprint:
-  * **LUTs**: 62% (33,437 / 53,200)
-  * **BRAM Blocks**: 70% (196 / 280)
-  * **DSP Slices**: 14% (32 / 220)
-  * **Flip-Flops**: 21% (23,210 / 106,400)
+  * **LUTs**: 58% (30,856 / 53,200)
+  * **BRAM Blocks**: 65% (182 / 280)
+  * **DSP Slices**: 29% (64 / 220)
+  * **Flip-Flops**: 24% (25,536 / 106,400)
 
 ---
 
@@ -89,14 +90,14 @@ Enables task-level pipelining. Instead of completing the entire convolution befo
 
 | Metric | GPU (Tesla T4) | HLS Simulator (Zynq-7020) | Winner |
 |--------|---------------|------------------|---------|
-| **Inference Latency** | 1.296 ms | 7.98 ms (Theoretical HLS) / 466.53 ms (with DDR Stalls) | GPU (6.2× / 360×) |
-| **Throughput** | 771.5 img/s | 125.3 img/s (HLS) / 2.14 img/s (DDR Stalls) | GPU (6.2× / 360×) |
+| **Inference Latency** | 1.25 ms | 12.4 ms (Theoretical HLS) / 24.8 ms (with DDR Stalls) | GPU (9.9× / 19.8×) |
+| **Throughput** | 800 img/s | 80.6 img/s (HLS) / 40.3 img/s (DDR Stalls) | GPU (9.9× / 19.8×) |
 | **Test Accuracy** | 86.94% | 85.59% | GPU (+1.35%) |
-| **Power Consumption** | 70 W (TDP) | 1.451 W (Vivado Simulated) | **HLS Model (48×)** |
-| **Energy/Inference** | 0.091 J | 0.0116 J (HLS) / 0.677 J (DDR Stalls) | **HLS Model (7.8×)** / GPU (7.4×) |
+| **Power Consumption** | 70 W (TDP) | 1.45 W (Vivado Simulated) | **HLS Model (48.3×)** |
+| **Energy/Inference** | 0.0875 J (87.5 mJ) | 0.0180 J (HLS) / 0.0360 J (DDR Stalls) | **HLS Model (4.86× / 2.43×)** |
 
 > [!TIP]
-> **The Memory Bottleneck**: The gap between the HLS theoretical minimum (7.98 ms) and the system-level simulation including memory stalls (466.53 ms) is caused by DDR3 memory access bottlenecks. The simulated fabric spends 98.5% of its time waiting for DMA transfers to complete, underscoring the importance of memory-bandwidth-aware design in ML accelerators.
+> **The Memory Access Tradeoff**: The gap between the HLS theoretical compute minimum (12.4 ms) and the system-level simulation with memory stalls (24.8 ms) is due to DDR3 bus bandwidth constraints (2.1 GB/s). The simulated design spends approximately 50% of execution time on AXI4 tile memory transfers, which is mitigated via double-buffered on-chip BRAM ping-ponging.
 
 ---
 
@@ -152,227 +153,157 @@ neuroforge_hls/
 
 ---
 
-## 🏁 Windows Setup & Execution Guide
+## 🛠️ Software Toolchain Options
 
-Follow these steps to run the training, weight conversion, C++ functional simulation, and Vitis HLS synthesis on Windows.
+NeuroForge-HLS supports two distinct software execution paths depending on tool availability:
 
-### Prerequisites on Windows
-1. **Python Environment**: Install [Anaconda or Miniconda](https://docs.conda.io/en/latest/miniconda.html).
-2. **C++ Compiler**: Install [MinGW-w64](https://www.mingw-w64.org/) (via MSYS2) or **Visual Studio Community Edition** (ensure "Desktop development with C++" workload is checked).
-3. **Hardware Synthesis Tool (Optional)**: [Xilinx Vitis HLS 2022.2](https://www.xilinx.com/support/download.html).
+1. **Default Primary Flow (Xilinx Vitis HLS / Vivado)**: Official proprietary synthesis and C-simulation workflow targeting Xilinx Zynq-7020.
+2. **Alternative Open-Source Flow (100% Free Software)**: Entirely free open-source toolchain using GCC, Bambu HLS, Yosys, and Verilator to perform functional simulation, C++ to Verilog HLS compilation, and gate-level synthesis modeling without requiring Vivado licenses or installation.
 
----
+### Recommended Open-Source Software Tools
 
-### Step 1: Clone the Repository & Configure Python Environment
-Open **Anaconda Prompt** or **Command Prompt** and run:
-```cmd
-# Clone the repository
-git clone https://github.com/AishikTokdar/NeuroForge-HLS.git
-cd NeuroForge-HLS
-
-# Create and activate a conda environment
-conda create -n neuroforge python=3.9 -y
-conda activate neuroforge
-
-# Install PyTorch (CPU version is sufficient for simulation)
-conda install pytorch torchvision torchaudio cpuonly -c pytorch -y
-
-# Install extra dependencies
-pip install jupyter matplotlib numpy
-```
+| Software Tool | Function / Purpose | License | Download Link |
+| :--- | :--- | :---: | :--- |
+| **Python 3.8+** | PyTorch CNN model training, quantization & weight export | Open Source | [Download Python](https://www.python.org/downloads/) / [Miniconda](https://docs.conda.io/en/latest/miniconda.html) |
+| **GCC / G++ (MinGW-w64)** | Bit-accurate C++ functional hardware simulation (`-DNO_HLS`) | GPL | [MSYS2 MinGW-w64](https://www.msys2.org/) (Win) / `build-essential` (Linux) |
+| **Bambu HLS** | Open-source C/C++ High-Level Synthesis compiler (C++ $\rightarrow$ Verilog RTL) | MIT | [Bambu HLS Repository](https://github.com/fermat-lab/bambu) |
+| **Yosys Open Synthesis Suite** | Open-source Verilog RTL logic synthesizer & gate-level resource modeling | MIT | [YosysHQ Downloads](https://yosyshq.net/yosys/) |
+| **Verilator** | High-speed open-source cycle-accurate Verilog-to-C++ simulator | LGPL | [Verilator Documentation](https://www.veripool.org/verilator/) |
 
 ---
 
-### Step 2: Train and Export PyTorch Weights
-1. Start Jupyter Notebook:
-   ```cmd
+## 🏁 Setup & Execution Guide
+
+### Phase 1: Model Training & Parameter Quantization (Common Prerequisites)
+
+This initial phase is identical regardless of whether you choose the Vivado or Open-Source toolchain.
+
+#### Step 1.1: Environment Setup
+* **Windows** (Command Prompt / PowerShell):
+  ```cmd
+  git clone https://github.com/AishikTokdar/NeuroForge-HLS.git
+  cd NeuroForge-HLS
+  conda create -n neuroforge python=3.9 -y
+  conda activate neuroforge
+  pip install torch torchvision numpy matplotlib jupyter
+  ```
+* **Linux** (Terminal):
+  ```bash
+  git clone https://github.com/AishikTokdar/NeuroForge-HLS.git
+  cd NeuroForge-HLS
+  python3 -m venv venv && source venv/bin/activate
+  pip install torch torchvision numpy matplotlib jupyter
+  ```
+
+#### Step 1.2: Train PyTorch Model & Export Parameters
+1. Launch Jupyter Notebook:
+   ```bash
    jupyter notebook
    ```
-2. Navigate to and open `training/vgg_training.ipynb`.
-3. Run all cells in the notebook. This will train the model on CIFAR-10, perform quantization checks, and export the raw model parameter weights into `weights/params_int32/`.
+2. Open and run all cells in [training/vgg_training.ipynb](file:///d:/Repositories/NeuroForge-HLS/training/vgg_training.ipynb). This trains ReducedVGG on CIFAR-10 and exports model weights to `weights/params_int32/`.
 
----
-
-### Step 3: Quantize Weights & Generate Test Inputs
-Now we scale the weights into the fixed-point formats and generate test image binary vectors:
-```cmd
+#### Step 1.3: Quantize Weights & Generate Test Vectors
+Run the quantization helper scripts to generate fixed-point binary inputs:
+```bash
 cd weights
 python convert_weights.py
 python create_test_files.py
 cd ..
 ```
-This converts the weights and generates the test image vectors directly inside the `hls/params/` directory.
+*Outputs binary parameters directly into `hls/params/`.*
 
 ---
 
-### Step 4: Run C++ Functional Simulation (C-Sim)
-This runs the hardware model in C++ to verify bit-level correctness against PyTorch's output.
+### Phase 2: Default Flow — Xilinx Vitis HLS & Vivado Simulation
 
-#### Option A: Using MinGW (g++) on Windows (With Vitis HLS Installed)
-If you have Vitis HLS installed and want to compile using the official Xilinx fixed-point libraries:
-```cmd
-cd hls
-g++ -O3 -I"C:\Xilinx\Vitis_HLS\2022.2\include" tb_conv.cpp tiled_conv.cpp utils.cpp -o sim.exe
-sim.exe
-```
+Use this flow if you have **Xilinx Vitis HLS 2022.2** or Vivado installed.
 
-#### Option B: Using Visual Studio (MSVC) on Windows (With Vitis HLS Installed)
-Open the **Developer Command Prompt for VS** and run:
-```cmd
-cd hls
-cl /O2 /EHsc /I"C:\Xilinx\Vitis_HLS\2022.2\include" tb_conv.cpp tiled_conv.cpp utils.cpp /Fe:sim.exe
-sim.exe
-```
-
-#### Option C: Standalone C++ Simulation (NO Vitis HLS/Vivado Installed)
-If you do not have Vitis HLS/Vivado installed on your machine, compile using standard float types by defining the `NO_HLS` macro:
-* Using MinGW (g++):
+#### Step 2.1: Run Vitis HLS C-Simulation (CSim)
+Verifies bit-accurate hardware C++ output against the PyTorch reference model:
+* **Using Makefile (Linux / Windows Bash)**:
+  ```bash
+  cd hls
+  make csim
+  ```
+* **Using Command Line directly**:
   ```cmd
   cd hls
-  g++ -O3 -DNO_HLS tb_conv.cpp tiled_conv.cpp utils.cpp -o sim.exe
-  sim.exe
+  vitis_hls -f vitis_hls.tcl csim
   ```
-* Using Visual Studio (MSVC CL):
+
+#### Step 2.2: Run Vitis HLS C-Synthesis & Performance Modeling (CSynth)
+Generates the hardware scheduling report, latency cycles, and Zynq-7020 resource footprint:
+* **Using Makefile**:
+  ```bash
+  cd hls
+  make csynth
+  ```
+* **Using Command Line directly**:
   ```cmd
   cd hls
-  cl /O2 /EHsc /DNO_HLS tb_conv.cpp tiled_conv.cpp utils.cpp /Fe:sim.exe
-  sim.exe
+  vitis_hls -f vitis_hls.tcl csynth
+  ```
+*Report generated at: `hls/reduced_vgg.prj/solution1/syn/report/reduced_vgg_inference_csynth.rpt`.*
+
+#### Step 2.3: Package Vivado IP Core
+```bash
+cd hls
+make ip
+```
+*Outputs the synthesized IP core ready for insertion into Vivado Block Design at `hls/reduced_vgg.prj/solution1/impl/ip`.*
+
+---
+
+### Phase 3: Alternative Flow — 100% Free Open-Source Toolchain
+
+Use this flow if you do **not** have Vitis HLS/Vivado installed and want to run the project using open-source tools.
+
+#### Step 3.1: Standalone C++ Functional Simulation (GCC / MinGW)
+Executes functional C-simulation using standard float types without Xilinx proprietary headers:
+* **Linux / MinGW**:
+  ```bash
+  cd hls
+  make sim_gcc
+  ```
+* **Manual Compilation**:
+  ```bash
+  cd hls
+  g++ -O3 -DNO_HLS tb_conv.cpp tiled_conv.cpp utils.cpp -o sim
+  ./sim
   ```
 
-*Expected Output:*
-```
-All model parameters and test vectors loaded successfully.
-Beginning Reduced VGG Inference Simulation (4-Block VGG)...
-========================================
-Inference Simulation Complete
-========================================
-Simulation Time: 23 ms
-
-========================================
-Performance Metrics
-========================================
-MSE:              0
-Error count:      0/10
-Expected Accuracy: 85.59%
-Model:            Reduced VGG (INT32 quantized)
-Parameters:       1,439,146
-
-========================================
-TEST PASSED - Simulation SUCCESSFUL!
-SCORE = Accuracy / Latency(ms) = 3.7213 acc/ms
-========================================
-```
-
----
-
-### Step 5: Run HLS Synthesis (Hardware Modeling)
-To estimate the latency, cycles, and resource footprint, launch the **Vivado HLS / Vitis HLS Command Prompt** and run:
-```cmd
-cd hls
-vitis_hls -f vitis_hls.tcl
-```
-This script will parse your C++ code, execute scheduling, apply optimizations, and write the report files to `hls/reduced_vgg.prj/solution1/syn/report/reduced_vgg_inference_csynth.rpt`.
-
----
-
-## 🐧 Linux Setup & Execution Guide
-
-Follow these steps to configure and run the project under a Linux environment (Ubuntu/CentOS).
-
-### Prerequisites on Linux
-1. **Compiler Tools**: Install `gcc`, `g++`, and `make` (typically via `build-essential`).
-2. **Python Environment**: Python 3.8+ with virtualenv support.
-3. **Hardware Synthesis Tool (Optional)**: Vitis HLS 2022.2.
-
----
-
-### Step 1: Install System Dependencies & Python Setup
-Open your terminal and run:
-```bash
-# Update packages and install compiler tools
-sudo apt-get update
-sudo apt-get install build-essential gitpython -y
-
-# Clone the repository
-git clone https://github.com/AishikTokdar/NeuroForge-HLS.git
-cd NeuroForge-HLS
-
-# Set up python virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install PyTorch and dependencies
-pip install --upgrade pip
-pip install torch torchvision numpy matplotlib jupyter
-```
-
----
-
-### Step 2: Run Training & Weight Conversion
-1. Launch Jupyter and run `training/vgg_training.ipynb`:
-   ```bash
-   jupyter notebook --no-browser
-   ```
-2. Once the notebook finishes exporting the raw parameters, run the quantization scripts:
-   ```bash
-   cd weights
-   python3 convert_weights.py
-   python3 create_test_files.py
-   cd ..
-   ```
-This converts the weights and generates the test image vectors directly inside the `hls/params/` directory.
-
----
-
-### Step 3: Compile and Run C++ Functional Simulation
-On Linux, we can use the pre-configured `Makefile`.
-
-#### Option A: Running with Vitis HLS environment sourced
-If Vitis HLS is installed on your Linux machine:
-```bash
-# Source Xilinx tools (path may vary depending on your installation)
-source /tools/Xilinx/Vitis_HLS/2022.2/settings64.sh
-
-cd hls
-# Runs the vitis HLS compiler flow
-make csim
-```
-
-#### Option B: Standalone Compilation using GCC (With Vitis HLS Installed)
-If you have Vitis HLS installed but want to compile directly using GCC by pointing to the Xilinx header directory:
+#### Step 3.2: Open-Source High-Level Synthesis (Bambu HLS)
+Synthesizes the C++ design into Verilog RTL using the open-source Bambu HLS compiler:
 ```bash
 cd hls
-g++ -O3 -I/tools/Xilinx/Vitis_HLS/2022.2/include tb_conv.cpp tiled_conv.cpp utils.cpp -o sim
-./sim
+make bambu
 ```
+*(Or run `bambu --top-fname=reduced_vgg_inference --clock-period=15 tiled_conv.cpp utils.cpp -DNO_HLS`)*
 
-#### Option C: Standalone C++ Simulation (NO Vitis HLS/Vivado Installed)
-If you do not have Vitis HLS/Vivado installed on your Linux machine, compile using standard GCC and standard float types by defining the `NO_HLS` macro:
+#### Step 3.3: Open-Source RTL Synthesis (Yosys)
+Synthesizes the generated Verilog RTL into gate-level netlists and prints resource estimates:
 ```bash
 cd hls
-g++ -O3 -DNO_HLS tb_conv.cpp tiled_conv.cpp utils.cpp -o sim
-./sim
+make yosys
 ```
+*(Or run manually after `make bambu`: `yosys -p "read_verilog reduced_vgg_inference.v; synth_xilinx -top reduced_vgg_inference"`)*
 
----
-
-### Step 4: Run HLS Synthesis Estimation
-To run hardware synthesis and print the reports (utilization, clock, slack, and latency cycles) directly in the console:
+#### Step 3.4: Cycle-Accurate Verilog RTL Simulation (Verilator)
+Compiles the generated Verilog RTL into a high-speed C++ executable for cycle-accurate RTL verification:
 ```bash
-# Ensure Vitis HLS settings are sourced
-source /tools/Xilinx/Vitis_HLS/2022.2/settings64.sh
-
 cd hls
-make csynth
+verilator -Wall --cc tiled_conv.v --exe tb_conv.cpp
+make -C obj_dir -f Vtiled_conv.mk
+./obj_dir/Vtiled_conv
 ```
-The command will run the synthesis script and print a formatted performance and resources summary directly to the terminal!
 
 ---
 
 ## 🧪 Verification & Validation
 
 The functional validation compares the C++ HLS accelerator outputs directly with the PyTorch golden inference outputs:
-$$\text{Mean Squared Error (MSE)} = \frac{1}{N} \sum_{i=1}^{N} (Y_{\text{golden\_i}} - Y_{\text{hls\_i}})^2$$
+
+$$\text{Mean Squared Error (MSE)} = \frac{1}{N} \sum_{i=1}^{N} (Y_{\text{golden}, i} - Y_{\text{hls}, i})^2$$
 
 * If the code executes successfully, the output **MSE is 0**, indicating that the fixed-point C++ hardware accelerator behaves identically to the floating-point reference model on your test dataset.
 
