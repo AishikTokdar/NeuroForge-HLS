@@ -1,12 +1,11 @@
-/**
- * @file tb_conv.cpp
- * @brief Enhanced Testbench with Accuracy Score Reporting
- */
 #include <iostream>
 #include <fstream>
 #include <cmath>
 #include <chrono>
 #include <algorithm>
+#include <cstdint>
+#include <cstdlib>
+#include <vector>
 
 #include "tiled_conv.hpp"
 #include "utils.hpp"
@@ -14,32 +13,27 @@
 using namespace std;
 using namespace std::chrono;
 
-//==============================================================================
-// LAYER SIZE DEFINITIONS
-//==============================================================================
-
-// Conv 1-1/1-2 (3 -> 32)
 #define W1_SIZE (32 * 3 * 3 * 3)
 #define B1_SIZE 32
 #define BN1_SIZE 32
 #define W2_SIZE (32 * 32 * 3 * 3)
 #define B2_SIZE 32
 #define BN2_SIZE 32
-// Conv 2-1/2-2 (32 -> 64)
+
 #define W3_SIZE (64 * 32 * 3 * 3)
 #define B3_SIZE 64
 #define BN3_SIZE 64
 #define W4_SIZE (64 * 64 * 3 * 3)
 #define B4_SIZE 64
 #define BN4_SIZE 64
-// Conv 3-1/3-2 (64 -> 128)
+
 #define W5_SIZE (128 * 64 * 3 * 3)
 #define B5_SIZE 128
 #define BN5_SIZE 128
 #define W6_SIZE (128 * 128 * 3 * 3)
 #define B6_SIZE 128
 #define BN6_SIZE 128
-// Conv 4-1/4-2 (128 -> 256)
+
 #define W7_SIZE (256 * 128 * 3 * 3)
 #define B7_SIZE 256
 #define BN7_SIZE 256
@@ -47,24 +41,17 @@ using namespace std::chrono;
 #define B8_SIZE 256
 #define BN8_SIZE 256
 
-// FC 1 (1024 -> 256)
 #define W_FC1_SIZE (256 * 1024)
 #define B_FC1_SIZE 256
-// FC 2 (256 -> 10)
 #define W_FC2_SIZE (10 * 256)
 #define B_FC2_SIZE 10
 
-// IO Sizes
 #define INPUT_SIZE (3 * 32 * 32)
 #define OUTPUT_SIZE 10
 
-//==============================================================================
-// MEMORY DEFINITIONS
-//==============================================================================
-
 fm_t input_fm_mem[INPUT_SIZE];
 fm_t output_fm_mem[OUTPUT_SIZE];
-fm_t output_golden_mem[OUTPUT_SIZE];
+float output_golden_mem[OUTPUT_SIZE];
 
 wt_t W_1_mem[W1_SIZE]; wt_t B_1_mem[B1_SIZE];
 wt_t W_2_mem[W2_SIZE]; wt_t B_2_mem[B2_SIZE];
@@ -89,11 +76,9 @@ wt_t W_FC2_mem[W_FC2_SIZE]; wt_t B_FC2_mem[B_FC2_SIZE];
 
 template <typename T, size_t N>
 void read_file(const char *path, T (&buffer)[N]) {
-    // First try relative to current working directory (e.g., solution1/csim/build)
     ifstream file(path, ios::in | ios::binary);
 
     if (!file.is_open()) {
-        // When csim runs from solution1/csim/build, project root is four levels up
         std::string alt = std::string("../../../../") + path;
         file.open(alt.c_str(), ios::in | ios::binary);
     }
@@ -104,28 +89,33 @@ void read_file(const char *path, T (&buffer)[N]) {
     }
 
     std::string filepath(path);
+    const size_t element_bytes = filepath.find("fp32") != std::string::npos ? 4 : 2;
+    file.seekg(0, ios::end);
+    if (file.tellg() != static_cast<std::streamoff>(N * element_bytes)) {
+        cerr << "ERROR: Incorrect binary file size: " << path << endl;
+        exit(1);
+    }
+    file.seekg(0, ios::beg);
     if (filepath.find("fp32") != std::string::npos) {
-        // It's a float32 test file (input or golden output)
-        float *temp = new float[N];
-        file.read(reinterpret_cast<char *>(temp), N * sizeof(float));
+        std::vector<float> temp(N);
+        file.read(reinterpret_cast<char *>(temp.data()), N * sizeof(float));
         for (size_t i = 0; i < N; i++) {
+            if (!std::isfinite(temp[i])) {
+                cerr << "ERROR: Nonfinite FP32 test data: " << path << endl;
+                exit(1);
+            }
             buffer[i] = (T)temp[i];
         }
-        delete[] temp;
     } else {
-        // It's a 16-bit fixed-point weight/bias binary file (2 bytes per element)
-        int16_t *temp = new int16_t[N];
-        file.read(reinterpret_cast<char *>(temp), N * sizeof(int16_t));
+        std::vector<int16_t> temp(N);
+        file.read(reinterpret_cast<char *>(temp.data()), N * sizeof(int16_t));
         for (size_t i = 0; i < N; i++) {
-#ifdef NO_HLS
-            // Convert 16-bit integer (representing Q12.4) to float
             buffer[i] = (T)(temp[i] / 16.0f);
-#else
-            // Copy raw bits directly into ap_fixed representation
-            buffer[i] = *reinterpret_cast<T*>(&temp[i]);
-#endif
         }
-        delete[] temp;
+    }
+    if (!file) {
+        cerr << "ERROR: Could not read complete file: " << path << endl;
+        exit(1);
     }
     file.close();
 }
@@ -179,6 +169,20 @@ int main()
 {
     read_bin_files();
 
+    if (std::all_of(W_1_mem, W_1_mem + W1_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_2_mem, W_2_mem + W2_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_3_mem, W_3_mem + W3_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_4_mem, W_4_mem + W4_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_5_mem, W_5_mem + W5_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_6_mem, W_6_mem + W6_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_7_mem, W_7_mem + W7_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_8_mem, W_8_mem + W8_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_FC1_mem, W_FC1_mem + W_FC1_SIZE, [](wt_t x) { return x == 0; }) ||
+        std::all_of(W_FC2_mem, W_FC2_mem + W_FC2_SIZE, [](wt_t x) { return x == 0; })) {
+        cerr << "ERROR: Degenerate all-zero model weights; inference validation is invalid." << endl;
+        return 1;
+    }
+
     std::cout << "Beginning Reduced VGG Inference Simulation (4-Block VGG)..." << std::endl;
     auto start = high_resolution_clock::now();
 
@@ -196,46 +200,49 @@ int main()
         output_fm_mem);
 
     auto end = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(end - start);
+    double duration_ms = std::chrono::duration<double, std::milli>(end - start).count();
 
     std::cout << "========================================" << std::endl;
     std::cout << "Inference Simulation Complete" << std::endl;
     std::cout << "========================================" << std::endl;
-    std::cout << "Simulation Time: " << duration.count() << " ms" << std::endl;
+    std::cout << "Simulation Time: " << duration_ms << " ms" << std::endl;
 
     long double mse = 0.0;
     int error_count = 0;
 
     for (int i = 0; i < OUTPUT_SIZE; i++)
     {
-        fm_t expected = output_golden_mem[i];
-        fm_t actual = output_fm_mem[i];
+        float expected = output_golden_mem[i];
+        float actual = (float)output_fm_mem[i];
 
         mse += std::pow((long double)(expected - actual), 2.0);
 
-        if (std::abs((float)expected - (float)actual) > 0.1) {
+        if (!std::isfinite(actual) || !std::isfinite(expected) ||
+            std::abs(expected - actual) > 0.1f) {
             error_count++;
         }
     }
 
     mse = mse / OUTPUT_SIZE;
 
-    float expected_accuracy = 85.59;  // INT16 fixed-point (ap_fixed<16,12>) quantization accuracy
-
     std::cout << "\n========================================" << std::endl;
     std::cout << "Performance Metrics" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << "MSE:              " << mse << std::endl;
     std::cout << "Error count:      " << error_count << "/" << OUTPUT_SIZE << std::endl;
-    std::cout << "Expected Accuracy: " << expected_accuracy << "%" << std::endl;
-    std::cout << "Model:            Reduced VGG (INT16 fixed-point, ap_fixed<16,12>)" << std::endl;
+    std::cout << "Dataset accuracy: not measured by this single-vector test" << std::endl;
+#ifdef NO_HLS
+    std::cout << "Arithmetic:       host floating point (not bit-accurate RTL)" << std::endl;
+#else
+    std::cout << "Arithmetic:       ap_fixed C simulation" << std::endl;
+#endif
     std::cout << "Parameters:       1,439,146" << std::endl;
 
     std::cout << "\n========================================" << std::endl;
-    if (mse <= 5.0 && error_count < (OUTPUT_SIZE / 2))
+    bool passed = std::isfinite((double)mse) && error_count == 0;
+    if (passed)
     {
         std::cout << "TEST PASSED - Simulation SUCCESSFUL!" << std::endl;
-        std::cout << "SCORE = Accuracy / Latency(ms) = " << expected_accuracy / (duration.count()) << " acc/ms" << std::endl;
     }
     else
     {
@@ -243,6 +250,5 @@ int main()
     }
     std::cout << "========================================" << std::endl;
 
-    return 0;
+    return passed ? 0 : 1;
 }
-

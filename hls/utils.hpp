@@ -1,16 +1,7 @@
-/**
- * @file utils.hpp
- * @brief Utility function declarations for Reduced VGG - OPTIMIZED VERSION
- */
-
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
 #include "tiled_conv.hpp"
-
-//==============================================================================
-// CONVOLUTION UTILITIES
-//==============================================================================
 
 void load_input_tile_from_DRAM(
 	fm_t *in_fm,
@@ -39,18 +30,10 @@ void store_output_tile_to_DRAM(
 	int tr, int tc, int kernel_group,
 	int N, int O, int TILE_HW, int OUT_BUF_DEPTH);
 
-//==============================================================================
-// POOLING UTILITIES
-//==============================================================================
-
 void max_pool_2x2(
 	fm_t *input_fm,
 	fm_t *output_fm,
 	int M, int I, int O);
-
-//==============================================================================
-// FULLY CONNECTED UTILITIES
-//==============================================================================
 
 void fully_connected_layer(
 	fm_t *input_fm,
@@ -60,5 +43,3 @@ void fully_connected_layer(
 	int IN_SIZE, int OUT_SIZE);
 
 #endif
-
-

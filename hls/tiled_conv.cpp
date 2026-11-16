@@ -1,8 +1,3 @@
-/**
- * @file tiled_conv.cpp - RESOURCE-CONSTRAINED VERSION
- * @brief Optimized for Zynq-7020 limits (< 80% utilization)
- */
-
 #include "tiled_conv.hpp"
 #include "utils.hpp"
 
@@ -19,9 +14,6 @@ void reduced_vgg_inference(
     wt_t *W_FC1, wt_t *B_FC1, wt_t *W_FC2, wt_t *B_FC2,
     fm_t *output_fm)
 {
-    // ============================================
-    // INTERFACE PRAGMAS
-    // ============================================
     #pragma HLS INTERFACE m_axi port=input_fm offset=slave bundle=gmem depth=3072
     #pragma HLS INTERFACE m_axi port=output_fm offset=slave bundle=gmem depth=10
     
@@ -88,14 +80,10 @@ void reduced_vgg_inference(
     
     #pragma HLS INTERFACE s_axilite port=return bundle=control
 
-    // ============================================
-    // INTERNAL BUFFERS - REDUCED PARTITIONING
-    // ============================================
     fm_t fm_buf1[FM_BUF_SIZE];
     fm_t fm_buf2[FM_BUF_SIZE];
     fm_t fm_fc1_out[FC1_OUT_SIZE];
     
-    // Reduced from factor=16 to factor=4 (4x less resources)
     #pragma HLS ARRAY_PARTITION variable=fm_buf1 cyclic factor=4 dim=1
     #pragma HLS ARRAY_PARTITION variable=fm_buf2 cyclic factor=4 dim=1
     #pragma HLS ARRAY_PARTITION variable=fm_fc1_out cyclic factor=8 dim=1
@@ -103,11 +91,6 @@ void reduced_vgg_inference(
     #pragma HLS BIND_STORAGE variable=fm_buf1 type=ram_2p impl=bram
     #pragma HLS BIND_STORAGE variable=fm_buf2 type=ram_2p impl=bram
 
-    // ============================================
-    // VGG INFERENCE PIPELINE
-    // ============================================
-    
-    // Block 0: 3  32 channels @ 32x32
     tiled_conv_layer(input_fm, W_1, B_1, fm_buf1, 3, 32, 32, 32, 1, 1, 8, 8);
     batch_norm_relu_layer(fm_buf1, G_1, T_1, M_1, V_1, fm_buf2, 32, 32);
     
@@ -116,7 +99,6 @@ void reduced_vgg_inference(
     
     max_pool_2x2(fm_buf2, fm_buf1, 32, 32, 16);
     
-    // Block 1: 32  64 channels @ 16x16
     tiled_conv_layer(fm_buf1, W_3, B_3, fm_buf2, 32, 16, 64, 16, 1, 1, 8, 8);
     batch_norm_relu_layer(fm_buf2, G_3, T_3, M_3, V_3, fm_buf1, 64, 16);
     
@@ -125,7 +107,6 @@ void reduced_vgg_inference(
     
     max_pool_2x2(fm_buf1, fm_buf2, 64, 16, 8);
     
-    // Block 2: 64  128 channels @ 8x8
     tiled_conv_layer(fm_buf2, W_5, B_5, fm_buf1, 64, 8, 128, 8, 1, 1, 8, 8);
     batch_norm_relu_layer(fm_buf1, G_5, T_5, M_5, V_5, fm_buf2, 128, 8);
     
@@ -134,17 +115,16 @@ void reduced_vgg_inference(
     
     max_pool_2x2(fm_buf2, fm_buf1, 128, 8, 4);
     
-    // Block 3: 128  256 channels @ 4x4
     tiled_conv_layer(fm_buf1, W_7, B_7, fm_buf2, 128, 4, 256, 4, 1, 1, 4, 8);
     batch_norm_relu_layer(fm_buf2, G_7, T_7, M_7, V_7, fm_buf1, 256, 4);
     
     tiled_conv_layer(fm_buf1, W_8, B_8, fm_buf2, 256, 4, 256, 4, 1, 1, 4, 8);
     batch_norm_relu_layer(fm_buf2, G_8, T_8, M_8, V_8, fm_buf1, 256, 4);
     
-    // Fully Connected Layers
-    fully_connected_layer(fm_buf1, W_FC1, B_FC1, fm_fc1_out, FC_IN_SIZE, FC1_OUT_SIZE);
+    max_pool_2x2(fm_buf1, fm_buf2, 256, 4, 2);
+
+    fully_connected_layer(fm_buf2, W_FC1, B_FC1, fm_fc1_out, FC_IN_SIZE, FC1_OUT_SIZE);
     
-    // Apply ReLU to FC1 output
     FC1_RELU: for (int i = 0; i < FC1_OUT_SIZE; i++) {
         #pragma HLS PIPELINE II=1
         if (fm_fc1_out[i] < 0) fm_fc1_out[i] = 0;
