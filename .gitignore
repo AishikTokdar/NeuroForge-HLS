@@ -18,3 +18,13 @@ hls/vivado*.str
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Local verification artifacts
+.pytest_cache/
+.verification/
+hls/sim
+hls/sim.exe
+hls/yosys_stats.json
+
+# Downloaded datasets and temporary training snapshots
+weights/training_run/
