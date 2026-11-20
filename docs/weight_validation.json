@@ -1,0 +1,1391 @@
+{
+  "dataset": "official CIFAR-10 test split",
+  "test_images": 10000,
+  "dataset_archive_md5": "c58f30108f718f92721af3b95e74349a",
+  "fp32_test_accuracy": 0.831,
+  "q12_4_weight_host_test_accuracy": 0.8726,
+  "cpp_images": 10000,
+  "cpp_accuracy": 0.8726,
+  "cpp_pytorch_prediction_agreement": 1.0,
+  "cpp_max_abs_logit_error": 1.9073486328125e-05,
+  "cpp_total_seconds": 95.8958272,
+  "cpp_workers": 4,
+  "cpp_arithmetic": "NO_HLS floating point with Q12.4 parameters",
+  "fixed_point_rtl_verified": false,
+  "converted_learned_tensors": {
+    "features.0.block.0.weight": {
+      "elements": 864,
+      "nonzero": 754
+    },
+    "features.0.block.3.weight": {
+      "elements": 9216,
+      "nonzero": 5500
+    },
+    "features.1.block.0.weight": {
+      "elements": 18432,
+      "nonzero": 11208
+    },
+    "features.1.block.3.weight": {
+      "elements": 36864,
+      "nonzero": 21532
+    },
+    "features.2.block.0.weight": {
+      "elements": 73728,
+      "nonzero": 43142
+    },
+    "features.2.block.3.weight": {
+      "elements": 147456,
+      "nonzero": 83235
+    },
+    "features.3.block.0.weight": {
+      "elements": 294912,
+      "nonzero": 151742
+    },
+    "features.3.block.3.weight": {
+      "elements": 589824,
+      "nonzero": 258707
+    },
+    "classifier.1.weight": {
+      "elements": 262144,
+      "nonzero": 86720
+    },
+    "classifier.4.weight": {
+      "elements": 2560,
+      "nonzero": 1470
+    }
+  },
+  "golden_vector": {
+    "dataset_index": 0,
+    "label": 3,
+    "class": "cat",
+    "prediction": 3,
+    "logits": [
+      -5.214818954467773,
+      -4.785269737243652,
+      -3.6972646713256836,
+      7.062195777893066,
+      -4.976833820343018,
+      3.4105026721954346,
+      -1.3896880149841309,
+      -3.118211507797241,
+      -6.513524532318115,
+      -5.43622350692749
+    ]
+  },
+  "torch_version": "2.7.1+cu118",
+  "device": "cuda",
+  "params_fp32_sha256": {
+    "classifier_1_bias.bin": "1e1ce3b450bed66a5313cfc5962e792032226e81c604ef5a825834237e19ab85",
+    "classifier_1_weight.bin": "95bedbec1aa432e08fd345bb4fd04a6a6cdaac068458e2e581976c84bd31f6f8",
+    "classifier_4_bias.bin": "d9e755f404e7496d00e24f70e9d4c06bc1a2b5090bd163436f3f9890a3b39da4",
+    "classifier_4_weight.bin": "8db8cdc9b1ecb5b7e72aaf20b4c14e0a6e9449d6f25a3e7d922455a9e0458ff9",
+    "features_0_block_0_bias.bin": "268c6fc91cfe2a15e2d58487a5ef6f862e1d0401d27f52c26ded1387c7457433",
+    "features_0_block_0_weight.bin": "7bc7d321c60ea090ef1964635b8265cd842f37c948a5661184d655f958d9e614",
+    "features_0_block_1_bias.bin": "e24765e19e096b1ab683ec55fad47628da1101016359a64644627ee53925a6b9",
+    "features_0_block_1_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_0_block_1_running_mean.bin": "2efc38496bbba3c43497931119b9b43bee4b47905e37883fd49d711ab77f1ba8",
+    "features_0_block_1_running_var.bin": "aab3403447db88eac567e61c894ccebc79e81bb9e3968b91e41f422747a814b4",
+    "features_0_block_1_weight.bin": "79c9506078691d486efed53d15701edd9eb83359682566e1396ce366ac781dfb",
+    "features_0_block_3_bias.bin": "98e08c3ba72fef6415ba68bfafaa2cfc3751638f9ec0690e48f94c4d5643e5c4",
+    "features_0_block_3_weight.bin": "8a5e1ef5b02a4045e691d9bb71a39f31efb68fa7d1a4bec4df3853632af36bc6",
+    "features_0_block_4_bias.bin": "16894cec62393d6418fb2cb4d1ea56a728c9becdda38564b99048798c19f4fc4",
+    "features_0_block_4_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_0_block_4_running_mean.bin": "9e96dc8a0dc39aabf20eb4dba43d1253b94400b50f41cf2092749010137fb341",
+    "features_0_block_4_running_var.bin": "145c00c3d660145fb065b69f061963bda7aa701abaea6128ac57d6c21b8f7558",
+    "features_0_block_4_weight.bin": "af2292ec4270bebe3f4fac3492e55919317c83f806b69768ef2eb61a3fe0b861",
+    "features_1_block_0_bias.bin": "17f42e095b2de19621d1b428bc9dd981ee7ebf7239b6b771637f9401eb135828",
+    "features_1_block_0_weight.bin": "90ff77a7cf4ac58894885bc2ea6a499fd05c0cd0a950aed064398f43b598f646",
+    "features_1_block_1_bias.bin": "f01adb0354ae87cdd79247ae0f319c00f2eb1df114a9efe5a0783a8ca0359da0",
+    "features_1_block_1_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_1_block_1_running_mean.bin": "69b2a6bc4c997f59f8e65182565c5909ed21c1aa8e7da7cda5d0b1042da751b8",
+    "features_1_block_1_running_var.bin": "4f6f655d908ee28e095f52af7a0f74c649f2f2e6ff8d794cd1c50f4ab74c4a87",
+    "features_1_block_1_weight.bin": "045ab10aeb56a630820553c32e892d7ec8cd1f89c1fa1407fce8e62fa3c0e7db",
+    "features_1_block_3_bias.bin": "4f91655c30ffbe09043189c6826d235c7adf74305dbdc27bbf8f2424fb1ceef2",
+    "features_1_block_3_weight.bin": "231df90d8fd44949f316f14fb0fd41c85ea3c6a1af805e0fa1671bd6a50ea4c0",
+    "features_1_block_4_bias.bin": "bde7bfd3906b3da6a2d7c1060c6e48ec6ec5644e2baaa7975ff73d3482db7b55",
+    "features_1_block_4_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_1_block_4_running_mean.bin": "1a3ec2a164413208eaa52df7dcfdb369d5abf5fa19b40e5c28dc12665e74f0d0",
+    "features_1_block_4_running_var.bin": "2f42b0c45b83ce2da43c737416ba84af18c3c1a860693d8245dcb9e4af65a246",
+    "features_1_block_4_weight.bin": "12808e4981b56c3d95a902b47d8e6cddfc42710f3e511ef82c68c3cee8dc5417",
+    "features_2_block_0_bias.bin": "9100348fd4ee1b07f43f91a9d260393dd901e7515c75d2ad983a7fd4caab7fe2",
+    "features_2_block_0_weight.bin": "934a5332466c1f1cc6d4d0e36e9c1271bbb298e58359889e957040fc77afcff8",
+    "features_2_block_1_bias.bin": "d5acea2f7c87741ab3e17277189225bfcc73b22c6a2f59ebf74b5e34ec1537d7",
+    "features_2_block_1_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_2_block_1_running_mean.bin": "a078d3cd99f51718d8e49b793b08343a70033d30bd062dad74398b132de37761",
+    "features_2_block_1_running_var.bin": "efda6b87d2fe3bc0371f15aa25d9a7311ded4a05a7db715253ca3cf2d29fb59b",
+    "features_2_block_1_weight.bin": "834d80e6a6e7e9f925128dc91f23bed9eecad07d581412d05f5e4477c1ec6e5f",
+    "features_2_block_3_bias.bin": "9447a50b8eab0a1fc02f24d973fe8b2ac49e44db6715f2637bb7f7679cf0c2cc",
+    "features_2_block_3_weight.bin": "af1dd4a7732175f8e2a5176ac19e35e44b62450191624a7cb8dd781010696c57",
+    "features_2_block_4_bias.bin": "bc29889e70ac88cf68853a0164c8e19bf5d5fd45b835e3edbaf5e4b6186d8d66",
+    "features_2_block_4_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_2_block_4_running_mean.bin": "6a6830776db0ce39c05bd31cd7527d887008db557885af68cb34fbb7d4ce974e",
+    "features_2_block_4_running_var.bin": "024bda3b2a2bf9c4c8a8e9b081d3157acb7710b8a9f038ced702a872a2309f39",
+    "features_2_block_4_weight.bin": "bd6978ed9129b51d9d52f1e05f1d443ae789fb4729223bd1a62b06d7dfa1666b",
+    "features_3_block_0_bias.bin": "fc35717cefc0da564ce7b74c27dded88d9c07bd1329a827a21b86c42bd6c7fc1",
+    "features_3_block_0_weight.bin": "7fcd993e2b2668727ab36e4c33150bc345f4ebfec0a87155279ca837a1e1c817",
+    "features_3_block_1_bias.bin": "aa00f9e2d84e1e2141e8b8dca15b3687284e8a4490c76201e362128d0e8d5ca0",
+    "features_3_block_1_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_3_block_1_running_mean.bin": "4faeaabd6093ace2e62dccde1bfe51027878c701bbcdf2f33a136f2cd3433bb9",
+    "features_3_block_1_running_var.bin": "531608ae68b964c25aa35a2970463d6da7c77fdfd5c2e9acc7f83053b6b17a62",
+    "features_3_block_1_weight.bin": "8fa03c64aac26c8a27be98bbb00112e559ca00ac02eef20840936e3eaffa280f",
+    "features_3_block_3_bias.bin": "be265eb39df9a18d37aa7b12ece8371c68322d19ee805d9cf8f5672062ef3d87",
+    "features_3_block_3_weight.bin": "530452df217032298b6494202379febeac1e732dc9e9f1166616daff46078e81",
+    "features_3_block_4_bias.bin": "013f069967aff02401e1fdebe323e4c6fd3e925aa2d6143fc1cc22e640498583",
+    "features_3_block_4_num_batches_tracked.bin": "93feef33ada445d0e81597cc1349773dc6f73a8cb9ca8fd2a428b689458cff80",
+    "features_3_block_4_running_mean.bin": "ba6aa863ce001f146bc6ce636f2a34dc51ef4f926ae9e1a0475e404856804f84",
+    "features_3_block_4_running_var.bin": "a0934c215bcd5fc4f39974ec92271ff992fc30b990d1114b2ae31dbc04a853e4",
+    "features_3_block_4_weight.bin": "31f2a8bef98a504256b8e8fac716b3d1c7e77788d86504bc7bba3fadf98b65cc"
+  },
+  "params_int32_sha256": {
+    "classifier_1_bias.bin": "c5104dac78cfe31b2d9a8bdefd0196b3991d33cf7866386bb837702e44399b95",
+    "classifier_1_weight.bin": "76358e485ef15c731fde47a509f9a7944d2777a3f52c235516c16b7293919e32",
+    "classifier_4_bias.bin": "a870f6a34192aee1d5563a958317c7ce462d58666673c4fd6fb64fd1c7efc142",
+    "classifier_4_weight.bin": "db46d999a49c6346fdbd0a625e33aeb442df584d51f529daa0c6a473280772db",
+    "features_0_block_0_bias.bin": "ccbf3a254b59baee47b1d509314899d8772a535f8e5e49983798edf23d892f60",
+    "features_0_block_0_weight.bin": "5e6e1510e008eaf52f9fc25bd73e4ef65c858b23230f4ce48218e8fba98ae05b",
+    "features_0_block_1_bias.bin": "b165c7f559087e0b251f90235bbf96fea1bf419ee5e5571d8ad8bbec6c39d4c7",
+    "features_0_block_1_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_0_block_1_running_mean.bin": "63adc78957f1cb2e7508a24842aa8de07f0e3e6f6efb56df80a5444ff98c5cc4",
+    "features_0_block_1_running_var.bin": "3328ec6534611b0083aff972448e0100ff895d579099cb31e9799ea435dff450",
+    "features_0_block_1_weight.bin": "e70299001d8cee12d5029394c80d27f1a857a1d9974dd155afc654054a86ea0e",
+    "features_0_block_3_bias.bin": "2f0959e1199b4195f3ca439af2281279abeb47a688e16257c54cb62e49104803",
+    "features_0_block_3_weight.bin": "189d83106115b01abd94ffaa71170352b6f830f43ae2762b16d8a8618a1d5332",
+    "features_0_block_4_bias.bin": "29e71a3c6b8446a913423a6eed077c4e418783b404942724313fb7918e68bd83",
+    "features_0_block_4_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_0_block_4_running_mean.bin": "9291c1a2598a0e9f7ff492ec4f9ee608a572435e02df471c2b6c2b6589193e14",
+    "features_0_block_4_running_var.bin": "1588a8504f8efff6ed6e9bbdf6dd3b4edce0d57449aebd10a3e53e8c2d3a39d3",
+    "features_0_block_4_weight.bin": "bce346b345e081117a037d0592c87ce731e6e8fd6d8b140ec6c9df1d9d9bb734",
+    "features_1_block_0_bias.bin": "2ad68ff1ca0b20f2e347b15184ce57dbea7749df4994a6607614a8f04d512f9d",
+    "features_1_block_0_weight.bin": "905d01708c3285f0bfa4850f8ed403d9e66dd2ed5ffbe54a3aa8b7367ca4d1a4",
+    "features_1_block_1_bias.bin": "da96a1f95ec7fae73788b7fde1292d7d88fd949f895b7c70e36869cb9fff9961",
+    "features_1_block_1_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_1_block_1_running_mean.bin": "80dbd5ef91b33df8029a14726875f0ddcec0a0973479849c6585089b976f10a2",
+    "features_1_block_1_running_var.bin": "f87d3e078919a5582e8ea943a82391cf70d07731d9bec6dc4a1fd59912891e2e",
+    "features_1_block_1_weight.bin": "9e1e3a0b6905c17ced0479f71c563a276cf05413730168d84cb6d4f74a8008cc",
+    "features_1_block_3_bias.bin": "03b6679497dcee16156a0b581deb6a25cb3a4edbb8c59beef5c4a08fb9415717",
+    "features_1_block_3_weight.bin": "bc9946ae40dac6ffd3b8037232d1f59dec0c47a74ea68db572fd5fd62b4a9f39",
+    "features_1_block_4_bias.bin": "ebe82695736885c555e7eb09b2e8832bc1605260c69c6e20a60c10230595d34a",
+    "features_1_block_4_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_1_block_4_running_mean.bin": "b56ed831d695023208edea4a8d47103a5c117a8098e5bfa78e40df7fd44bcad3",
+    "features_1_block_4_running_var.bin": "f4b91ac330fc0f00c630b5ab68b01f1ca54072af1cbb06f5b16381dba6f32941",
+    "features_1_block_4_weight.bin": "ce1191a643d5497344afc3627c255ada1472069d7d12c4f3c547310a615707b4",
+    "features_2_block_0_bias.bin": "3611d072d184ca40252b208fd4a1096bf2ce9d6f2266d343d08f02a450649366",
+    "features_2_block_0_weight.bin": "284456358a677e5d6dc069d14db0dec58889af0f32251ebdb09dcb2a527ce136",
+    "features_2_block_1_bias.bin": "8f60546bd2b0d4d2ddc4b1355834ec9f551e40d2e2683c1cb3d34caf16633d6d",
+    "features_2_block_1_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_2_block_1_running_mean.bin": "267611ca9822991b625d83ec32677b6a73200c4862d5ac847f88799628e156d1",
+    "features_2_block_1_running_var.bin": "7f92f6903c666c49fd783e28932837962c01db8d10f8b89f2ae8e5d505a75163",
+    "features_2_block_1_weight.bin": "7356af1b129d6f4356fd2a3e38688eea892536f79ee5622dc8f31fa19bbf3ca7",
+    "features_2_block_3_bias.bin": "00fc0d8180f7371a2e777d8eb79fb319d32edece17ff3e28d1c42979856f8c1d",
+    "features_2_block_3_weight.bin": "6dc280c0e2127ecaef49ef21e175d083d79abcb7913fbe9ab00f4db0c1213fb1",
+    "features_2_block_4_bias.bin": "273e38502d645f1ea328c869f9bcfe4ba657a6e9da9ea70ffdf40ed2a0ff76e0",
+    "features_2_block_4_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_2_block_4_running_mean.bin": "8e5013d1de98a48647db2b77e0bbac90545c8ecfd69fdb10e8e386c652443c52",
+    "features_2_block_4_running_var.bin": "5af019b8416e7d9d32dcc02ced41ceebb1ae6db68a354292b097471f4f281323",
+    "features_2_block_4_weight.bin": "b70e194487131f8a44b50da0b93c6f53a4861946eb9f107d762946fd0c9f4943",
+    "features_3_block_0_bias.bin": "bb6bcfc21c68f36654e419bd09e4736b0f41b938a180cb49197f836b51061723",
+    "features_3_block_0_weight.bin": "72819f84b875b0c37102685ff7e3646c91bc8395bbdde325dfab634ee227d584",
+    "features_3_block_1_bias.bin": "97484e5238389a4a896a213ea31d97c0e3d991b9b123c9c4633a93abfce32dd3",
+    "features_3_block_1_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_3_block_1_running_mean.bin": "b396e9c51a5ad4af8c02373100d4b622f12624ff578734480c4c0d92d8c46392",
+    "features_3_block_1_running_var.bin": "d371ef5e89d211da0f28675ff0b9261493f796402730a2529e82e47d53d563b1",
+    "features_3_block_1_weight.bin": "c5e5b814eeade6e56b3dcb236fc18b182dcfec62b74162ed45fcb6e725102995",
+    "features_3_block_3_bias.bin": "8857e2c1f18aeca124585d6a972bc7a3dd13bf81474b1151ac0ea54fcd2fa683",
+    "features_3_block_3_weight.bin": "fb54604aaa67fec00c1591bffeebc9f2344d777caaecf9d2ee5111e514b42af6",
+    "features_3_block_4_bias.bin": "f6dfd7077052351320e645be45430bfba81b1f23d2d3f4dbe386ab4ad83bb7e5",
+    "features_3_block_4_num_batches_tracked.bin": "3c05fdd2c58ac30673647fb0670cdd78dbf5123e9cd384463736d4e5c90fd704",
+    "features_3_block_4_running_mean.bin": "ebc3c9f1bce325c768e97ae22c1a245616a32bfc329f906773dc50c583030278",
+    "features_3_block_4_running_var.bin": "d09384ed9501c67df1f7b1f6b780d5db671dafcae61ae18be1dced7bd9ea7f14",
+    "features_3_block_4_weight.bin": "57728459cbb00a4aa24ba5ed168d4d8cf48ca58d4bcb18be7b5f5eaf17160a80"
+  },
+  "params_sha256": {
+    "classifier_1_bias.bin": "daf5e44d8ffbdcad22b8083cb478d2e02ca5b495457bda1432ed1bd130a3e137",
+    "classifier_1_weight.bin": "b144eca17fba1e2acfb3ad11ab371d4dd2e41772d506e6eb7134f9b08cfa09b4",
+    "classifier_4_bias.bin": "89c0fa40ff7955fd0304c64acd501063df24d8cb1f2635d1c02963ff2080ffb7",
+    "classifier_4_weight.bin": "0816d06e8d056197a7cb437e6086efd8c9921c0765a4c07c0145dc555feb7dac",
+    "features_0_block_0_bias.bin": "ad8c162d175231a07b6b35f5d44b1d231c1af54ccb414b017dfe7037d699e186",
+    "features_0_block_0_weight.bin": "a2948159dfdfc56e514f974507ab8f4130a99d637aeb7ebbd01d7f7dda431078",
+    "features_0_block_1_bias.bin": "953a43562be69111a85583b0bc98ca65d112209430fa0d5869dcb2ae7d1d976f",
+    "features_0_block_1_running_mean.bin": "ee972d2db6f75f2dfa9b073555b3c6d4ac20b8097c671776b7c25a204e9d6fbd",
+    "features_0_block_1_running_var.bin": "a54f7bf64460fe9899245b16568bc856b8259f0156f844566e7eaf08520120a3",
+    "features_0_block_1_weight.bin": "b2dd2704ad73a8816388cc23a2d632482449f4cfc49984a20cb56b03101ffe97",
+    "features_0_block_3_bias.bin": "e0cc3437018c982592f31580dc6f40e1fabb58ab1567d805a9f2354522a9fea6",
+    "features_0_block_3_weight.bin": "adb41575338a4a1a345c03fa663878904c69f6b132e31a77c4b4621738066692",
+    "features_0_block_4_bias.bin": "1b2245a2b10c8a57eb0d3ce0fc7a45289e7a5a26bdc7c940bd53359c4eaf1c5f",
+    "features_0_block_4_running_mean.bin": "2cf07e67bb7600ce6410efbccdfabadc28b3ac22adc14b3e1df4a283215a3af2",
+    "features_0_block_4_running_var.bin": "07cb9be73e10aad5e22148b4e0e6f7a2f0770cd02b9dc716156405fbc54042ff",
+    "features_0_block_4_weight.bin": "2fcd1536580019996c399a72b7e2d055566822d33d03048d53e173f8e8e89778",
+    "features_1_block_0_bias.bin": "f522fbb50359ffa9b9a2d19fa3960630d4d2b3f79506aded79f467fb650acd49",
+    "features_1_block_0_weight.bin": "1b97caabcb63d68f781cd2f085fbcef369acb5dc42c7949baab48d584ed2191f",
+    "features_1_block_1_bias.bin": "3c348b1bc6ab31a87817f466e5d50432e70203e7965dd430fec681e9fa07b47c",
+    "features_1_block_1_running_mean.bin": "524e247d780539b49359121fb02ba43996bc5877b3eca0e5fc5c80b88c3e23aa",
+    "features_1_block_1_running_var.bin": "aab8df95cf98920e190ef5f0a8a280258c66fe6e3e6357344896477a11c7eba3",
+    "features_1_block_1_weight.bin": "ec1644a5fe20b49207e5fbb524230c545b217aa973a033c2afb428d2101fa1b8",
+    "features_1_block_3_bias.bin": "103d4f7ce142efa8e30ccd3a30fbd7c3f251230b93ec7e7a62c644db951c8d38",
+    "features_1_block_3_weight.bin": "255fe1c703681b370f66877a0280dd77b19efbd14a407f65fcd4552c987015c6",
+    "features_1_block_4_bias.bin": "af44486764a52b2102f6067609bf5dfe553490ae0dcb7e9927d1b78ba2b50d7a",
+    "features_1_block_4_running_mean.bin": "c820a5f415d49aecb6a66d4ac18015a489542417a0bcf10b211ede84ba74c6c0",
+    "features_1_block_4_running_var.bin": "e2ef5d630d60142c42ce9bc91c5f64974e71e588c76097ea4af62582227eb696",
+    "features_1_block_4_weight.bin": "b8edfc1301d16356cc9ebd94552d05b65201618cc43f0576c44dfdf75f1223af",
+    "features_2_block_0_bias.bin": "f0f4f11fbd4b39cb0f13a7d45ab84104c0f141aaf600056d201ebb5cc26a219e",
+    "features_2_block_0_weight.bin": "ca9151178da611f68c4b4bf33f024169c432f2ad7a3003ff52a20849dc458dad",
+    "features_2_block_1_bias.bin": "8449381b0f4a0e9f8e1e09d235ffc04eb64064ba6e79f62e6b41ac18a2e55cad",
+    "features_2_block_1_running_mean.bin": "449e4cb48339b4a9bdf34f72ca7da6ed1b714c86d977fa7fbd33aeca498294ef",
+    "features_2_block_1_running_var.bin": "8fbd4904b5b51323a6c9ca9155490fc1026e5815c478601b7e1c10ba4885b0c0",
+    "features_2_block_1_weight.bin": "c9d92cf7fc720596895c5eb55609b2705d712a49fec1ddb8b80db56a880db124",
+    "features_2_block_3_bias.bin": "2438aaeeb0d4c0e91f261dc208a4d6c72bf37dac011dd9a1284b4455114400b3",
+    "features_2_block_3_weight.bin": "99f2cb1e9b485df33d52ce1f2218c6be03a6087613d52e7bf249c0fe0e90e50d",
+    "features_2_block_4_bias.bin": "e35804899f7447e4bb443e7ec77a71d98610232fd682a0b54b5a365f09ef19c5",
+    "features_2_block_4_running_mean.bin": "ad64087ebfdee2bc47acd694b89f9cb37b912c5565ac3dc687a1140e52dc280b",
+    "features_2_block_4_running_var.bin": "6053bafb78739779d4f76391e794179d8eed78a24e71300241371fbbf4d84569",
+    "features_2_block_4_weight.bin": "b113e759609291d44db8ed8e597ff58e59e929633053f4318d2e4cea545111e2",
+    "features_3_block_0_bias.bin": "5573d0f04d98cfc780dbc934b2c089708854dc7823a8ed622ade442b785a9b86",
+    "features_3_block_0_weight.bin": "72d4a3274a25c542218cd9820b549ab0f4daf1e243a209854523f54d1003a9ba",
+    "features_3_block_1_bias.bin": "7b486c54f77c84f3dbb712bab399508a5ffa30143d2aed0d9b2dd02bf3fecb6b",
+    "features_3_block_1_running_mean.bin": "8af9513ec2ceba2a01f32b1962391e353a78cc281c2c18de6e41fdf420282297",
+    "features_3_block_1_running_var.bin": "394b6872b91efc2b140952f141577649c20fa3329b9735dd66eb239c775cce3e",
+    "features_3_block_1_weight.bin": "27bd56d82a4f3e931dbda11e56dbbdfc46adff4ad4aba001af83fef2a002cf41",
+    "features_3_block_3_bias.bin": "10f4743637aaa1d8763e371e0ab3fa5b4df1cc0a48148561613ce84ca0105187",
+    "features_3_block_3_weight.bin": "0038e98e246a741272f1d612a37f181f4cbb9c1dc19d3a98c6ecd7a26dcde825",
+    "features_3_block_4_bias.bin": "da9b51be7f32b9e4a096f436e0b06334a8332fabed14f36277496c6cad348f58",
+    "features_3_block_4_running_mean.bin": "9c990fd9219a1f96009cd0dfbd828de6fc8a131820c5a765b97512ce5db863d1",
+    "features_3_block_4_running_var.bin": "2d2227908949151d3e8d7c05ce3d2a54a0d050275c6753522a87d593e2e6b857",
+    "features_3_block_4_weight.bin": "db5eac9a3ecb1f14ee3619b2ce34f97ea8d01d278e8fdfd446210a42a3c5f8f1",
+    "input_fp32.bin": "fd94df6218a85edeac350ac94f8d3e36e4926469fc2da96968f37644c7b51e3a",
+    "output_golden_fp32.bin": "1e50c018ea20e0c56f8b6f4f5ce8a3c65acb6b8b202e8f45a2f99cb7d3e76796"
+  },
+  "cpp_macro_recall": 0.8726,
+  "cpp_weighted_recall": 0.8726,
+  "cpp_macro_precision": 0.8717882391714925,
+  "cpp_macro_f1": 0.8718006173107549,
+  "cpp_classification": {
+    "samples": 10000,
+    "correct": 8726,
+    "errors": 1274,
+    "class_names": [
+      "airplane",
+      "automobile",
+      "bird",
+      "cat",
+      "deer",
+      "dog",
+      "frog",
+      "horse",
+      "ship",
+      "truck"
+    ],
+    "accuracy": 0.8726,
+    "accuracy_wilson_95_interval": [
+      0.865921688601148,
+      0.8789921558130238
+    ],
+    "macro_precision": 0.8717882391714925,
+    "macro_recall": 0.8726,
+    "macro_f1": 0.8718006173107549,
+    "weighted_precision": 0.8717882391714926,
+    "weighted_recall": 0.8726,
+    "weighted_f1": 0.8718006173107548,
+    "micro_precision": 0.8726,
+    "micro_recall": 0.8726,
+    "micro_f1": 0.8726,
+    "balanced_accuracy": 0.8726,
+    "matthews_correlation_coefficient": 0.8585321718360374,
+    "cohen_kappa": 0.8584444444444445,
+    "top_k_accuracy": {
+      "1": 0.8726,
+      "3": 0.98,
+      "5": 0.9948
+    },
+    "mean_reciprocal_rank": 0.9264207142857144,
+    "macro_roc_auc_ovr": 0.9902739777777778,
+    "macro_average_precision_ovr": 0.9417629674222654,
+    "selective_predictions": [
+      {
+        "threshold": 0.0,
+        "accepted": 10000,
+        "rejected": 0,
+        "coverage": 1.0,
+        "accuracy": 0.8726,
+        "macro_recall_counting_rejections_as_misses": 0.8726
+      },
+      {
+        "threshold": 0.5,
+        "accepted": 9561,
+        "rejected": 439,
+        "coverage": 0.9561,
+        "accuracy": 0.8957222047902939,
+        "macro_recall_counting_rejections_as_misses": 0.8564
+      },
+      {
+        "threshold": 0.7,
+        "accepted": 8716,
+        "rejected": 1284,
+        "coverage": 0.8716,
+        "accuracy": 0.9284075263882515,
+        "macro_recall_counting_rejections_as_misses": 0.8091999999999999
+      },
+      {
+        "threshold": 0.8,
+        "accepted": 8236,
+        "rejected": 1764,
+        "coverage": 0.8236,
+        "accuracy": 0.9448761534725595,
+        "macro_recall_counting_rejections_as_misses": 0.7782
+      },
+      {
+        "threshold": 0.9,
+        "accepted": 7602,
+        "rejected": 2398,
+        "coverage": 0.7602,
+        "accuracy": 0.9625098658247829,
+        "macro_recall_counting_rejections_as_misses": 0.7316999999999999
+      },
+      {
+        "threshold": 0.95,
+        "accepted": 7060,
+        "rejected": 2940,
+        "coverage": 0.706,
+        "accuracy": 0.9735127478753541,
+        "macro_recall_counting_rejections_as_misses": 0.6873
+      },
+      {
+        "threshold": 0.99,
+        "accepted": 5993,
+        "rejected": 4007,
+        "coverage": 0.5993,
+        "accuracy": 0.9866510929417653,
+        "macro_recall_counting_rejections_as_misses": 0.5913
+      }
+    ],
+    "negative_log_likelihood": 0.4072363926663086,
+    "brier_score": 0.18803620447933395,
+    "expected_calibration_error": 0.03982375885045279,
+    "calibration_bins": 15,
+    "mean_confidence": 0.9119841096603192,
+    "mean_confidence_correct": 0.9442479254248591,
+    "mean_confidence_wrong": 0.6909997640077485,
+    "per_class": [
+      {
+        "index": 0,
+        "name": "airplane",
+        "support": 1000,
+        "predicted_count": 1056,
+        "true_positive": 903,
+        "false_positive": 153,
+        "false_negative": 97,
+        "true_negative": 8847,
+        "precision": 0.8551136363636364,
+        "recall": 0.903,
+        "f1": 0.8784046692607005,
+        "specificity": 0.983,
+        "roc_auc_ovr": 0.9926684444444445,
+        "average_precision_ovr": 0.9476399100921982
+      },
+      {
+        "index": 1,
+        "name": "automobile",
+        "support": 1000,
+        "predicted_count": 1071,
+        "true_positive": 966,
+        "false_positive": 105,
+        "false_negative": 34,
+        "true_negative": 8895,
+        "precision": 0.9019607843137255,
+        "recall": 0.966,
+        "f1": 0.9328826653790439,
+        "specificity": 0.9883333333333333,
+        "roc_auc_ovr": 0.9975196666666668,
+        "average_precision_ovr": 0.9868335973200733
+      },
+      {
+        "index": 2,
+        "name": "bird",
+        "support": 1000,
+        "predicted_count": 934,
+        "true_positive": 797,
+        "false_positive": 137,
+        "false_negative": 203,
+        "true_negative": 8863,
+        "precision": 0.8533190578158458,
+        "recall": 0.797,
+        "f1": 0.8241985522233711,
+        "specificity": 0.9847777777777778,
+        "roc_auc_ovr": 0.983576888888889,
+        "average_precision_ovr": 0.9108668749541886
+      },
+      {
+        "index": 3,
+        "name": "cat",
+        "support": 1000,
+        "predicted_count": 944,
+        "true_positive": 721,
+        "false_positive": 223,
+        "false_negative": 279,
+        "true_negative": 8777,
+        "precision": 0.763771186440678,
+        "recall": 0.721,
+        "f1": 0.7417695473251029,
+        "specificity": 0.9752222222222222,
+        "roc_auc_ovr": 0.9714932222222221,
+        "average_precision_ovr": 0.841468687374332
+      },
+      {
+        "index": 4,
+        "name": "deer",
+        "support": 1000,
+        "predicted_count": 977,
+        "true_positive": 861,
+        "false_positive": 116,
+        "false_negative": 139,
+        "true_negative": 8884,
+        "precision": 0.8812691914022518,
+        "recall": 0.861,
+        "f1": 0.8710166919575114,
+        "specificity": 0.9871111111111112,
+        "roc_auc_ovr": 0.9907603333333332,
+        "average_precision_ovr": 0.9406755312833661
+      },
+      {
+        "index": 5,
+        "name": "dog",
+        "support": 1000,
+        "predicted_count": 994,
+        "true_positive": 811,
+        "false_positive": 183,
+        "false_negative": 189,
+        "true_negative": 8817,
+        "precision": 0.8158953722334004,
+        "recall": 0.811,
+        "f1": 0.8134403209628887,
+        "specificity": 0.9796666666666667,
+        "roc_auc_ovr": 0.983944,
+        "average_precision_ovr": 0.8996338084140553
+      },
+      {
+        "index": 6,
+        "name": "frog",
+        "support": 1000,
+        "predicted_count": 1037,
+        "true_positive": 922,
+        "false_positive": 115,
+        "false_negative": 78,
+        "true_negative": 8885,
+        "precision": 0.8891031822565092,
+        "recall": 0.922,
+        "f1": 0.9052528227785961,
+        "specificity": 0.9872222222222222,
+        "roc_auc_ovr": 0.9945723333333334,
+        "average_precision_ovr": 0.9650189978541872
+      },
+      {
+        "index": 7,
+        "name": "horse",
+        "support": 1000,
+        "predicted_count": 993,
+        "true_positive": 899,
+        "false_positive": 94,
+        "false_negative": 101,
+        "true_negative": 8906,
+        "precision": 0.905337361530715,
+        "recall": 0.899,
+        "f1": 0.902157551430005,
+        "specificity": 0.9895555555555555,
+        "roc_auc_ovr": 0.9953106666666667,
+        "average_precision_ovr": 0.9679446340333601
+      },
+      {
+        "index": 8,
+        "name": "ship",
+        "support": 1000,
+        "predicted_count": 978,
+        "true_positive": 920,
+        "false_positive": 58,
+        "false_negative": 80,
+        "true_negative": 8942,
+        "precision": 0.9406952965235174,
+        "recall": 0.92,
+        "f1": 0.9302325581395349,
+        "specificity": 0.9935555555555555,
+        "roc_auc_ovr": 0.9965214444444445,
+        "average_precision_ovr": 0.9794816245079616
+      },
+      {
+        "index": 9,
+        "name": "truck",
+        "support": 1000,
+        "predicted_count": 1016,
+        "true_positive": 926,
+        "false_positive": 90,
+        "false_negative": 74,
+        "true_negative": 8910,
+        "precision": 0.9114173228346457,
+        "recall": 0.926,
+        "f1": 0.9186507936507937,
+        "specificity": 0.99,
+        "roc_auc_ovr": 0.9963727777777778,
+        "average_precision_ovr": 0.978066008388932
+      }
+    ],
+    "confusion_matrix": [
+      [
+        903,
+        16,
+        21,
+        10,
+        4,
+        0,
+        1,
+        1,
+        25,
+        19
+      ],
+      [
+        4,
+        966,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        4,
+        26
+      ],
+      [
+        46,
+        3,
+        797,
+        28,
+        36,
+        20,
+        43,
+        14,
+        5,
+        8
+      ],
+      [
+        17,
+        12,
+        36,
+        721,
+        39,
+        107,
+        32,
+        19,
+        9,
+        8
+      ],
+      [
+        12,
+        2,
+        25,
+        20,
+        861,
+        19,
+        25,
+        31,
+        3,
+        2
+      ],
+      [
+        5,
+        3,
+        22,
+        103,
+        17,
+        811,
+        8,
+        27,
+        1,
+        3
+      ],
+      [
+        4,
+        0,
+        23,
+        34,
+        5,
+        5,
+        922,
+        1,
+        3,
+        3
+      ],
+      [
+        15,
+        0,
+        9,
+        20,
+        14,
+        32,
+        0,
+        899,
+        1,
+        10
+      ],
+      [
+        37,
+        19,
+        1,
+        6,
+        1,
+        0,
+        5,
+        0,
+        920,
+        11
+      ],
+      [
+        13,
+        50,
+        0,
+        2,
+        0,
+        0,
+        1,
+        1,
+        7,
+        926
+      ]
+    ],
+    "largest_confusions": [
+      {
+        "actual": "cat",
+        "predicted": "dog",
+        "count": 107,
+        "fraction_of_actual": 0.107
+      },
+      {
+        "actual": "dog",
+        "predicted": "cat",
+        "count": 103,
+        "fraction_of_actual": 0.103
+      },
+      {
+        "actual": "truck",
+        "predicted": "automobile",
+        "count": 50,
+        "fraction_of_actual": 0.05
+      },
+      {
+        "actual": "bird",
+        "predicted": "airplane",
+        "count": 46,
+        "fraction_of_actual": 0.046
+      },
+      {
+        "actual": "bird",
+        "predicted": "frog",
+        "count": 43,
+        "fraction_of_actual": 0.043
+      },
+      {
+        "actual": "cat",
+        "predicted": "deer",
+        "count": 39,
+        "fraction_of_actual": 0.039
+      },
+      {
+        "actual": "ship",
+        "predicted": "airplane",
+        "count": 37,
+        "fraction_of_actual": 0.037
+      },
+      {
+        "actual": "bird",
+        "predicted": "deer",
+        "count": 36,
+        "fraction_of_actual": 0.036
+      },
+      {
+        "actual": "cat",
+        "predicted": "bird",
+        "count": 36,
+        "fraction_of_actual": 0.036
+      },
+      {
+        "actual": "frog",
+        "predicted": "cat",
+        "count": 34,
+        "fraction_of_actual": 0.034
+      }
+    ],
+    "reliability_bins": [
+      {
+        "lower": 0.0,
+        "upper": 0.06666666666666667,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 1,
+        "confidence": 0.17618771279171924,
+        "accuracy": 1.0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 15,
+        "confidence": 0.2440909213863776,
+        "accuracy": 0.26666666666666666
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 49,
+        "confidence": 0.31293473203978395,
+        "accuracy": 0.30612244897959184
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 111,
+        "confidence": 0.3690468695112207,
+        "accuracy": 0.3783783783783784
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 169,
+        "confidence": 0.4352389841686586,
+        "accuracy": 0.34911242603550297
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 240,
+        "confidence": 0.5053442180578848,
+        "accuracy": 0.475
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 270,
+        "confidence": 0.5669344977196087,
+        "accuracy": 0.5333333333333333
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 295,
+        "confidence": 0.634653514816236,
+        "accuracy": 0.5898305084745763
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 285,
+        "confidence": 0.7016505293704155,
+        "accuracy": 0.6175438596491228
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 329,
+        "confidence": 0.7668954619182539,
+        "accuracy": 0.6534954407294833
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 369,
+        "confidence": 0.8342788880461475,
+        "accuracy": 0.7100271002710027
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 591,
+        "confidence": 0.9028958121919112,
+        "accuracy": 0.7901861252115059
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1.0,
+        "count": 7276,
+        "confidence": 0.9937923441773377,
+        "accuracy": 0.9693512919186366
+      }
+    ],
+    "averaging_notes": "Macro includes all named classes; zero denominators give 0. Balanced accuracy averages supported classes. Micro recall equals accuracy for single-label multiclass classification.",
+    "calibration_notes": "Softmax of raw logits, without calibration fitted to the test set. ECE uses equal-width confidence bins. Multiclass Brier score sums across classes (range 0..2).",
+    "interval_notes": "Wilson binomial approximation for accuracy; does not measure training-run variation or distribution shift.",
+    "ranking_notes": "One-vs-rest ranking uses softmax probabilities with tied scores grouped. Undefined classes are excluded from ranking macro means and reported as null.",
+    "selective_notes": "Fixed descriptive thresholds; not tuned for deployment. Accepted-set accuracy must be read with coverage and recall counting rejected examples as misses."
+  },
+  "q12_4_weight_host_classification": {
+    "samples": 10000,
+    "correct": 8726,
+    "errors": 1274,
+    "class_names": [
+      "airplane",
+      "automobile",
+      "bird",
+      "cat",
+      "deer",
+      "dog",
+      "frog",
+      "horse",
+      "ship",
+      "truck"
+    ],
+    "accuracy": 0.8726,
+    "accuracy_wilson_95_interval": [
+      0.865921688601148,
+      0.8789921558130238
+    ],
+    "macro_precision": 0.8717882391714925,
+    "macro_recall": 0.8726,
+    "macro_f1": 0.8718006173107549,
+    "weighted_precision": 0.8717882391714926,
+    "weighted_recall": 0.8726,
+    "weighted_f1": 0.8718006173107548,
+    "micro_precision": 0.8726,
+    "micro_recall": 0.8726,
+    "micro_f1": 0.8726,
+    "balanced_accuracy": 0.8726,
+    "matthews_correlation_coefficient": 0.8585321718360374,
+    "cohen_kappa": 0.8584444444444445,
+    "top_k_accuracy": {
+      "1": 0.8726,
+      "3": 0.98,
+      "5": 0.9948
+    },
+    "mean_reciprocal_rank": 0.9264207142857144,
+    "macro_roc_auc_ovr": 0.9902739888888888,
+    "macro_average_precision_ovr": 0.9417629795172052,
+    "selective_predictions": [
+      {
+        "threshold": 0.0,
+        "accepted": 10000,
+        "rejected": 0,
+        "coverage": 1.0,
+        "accuracy": 0.8726,
+        "macro_recall_counting_rejections_as_misses": 0.8726
+      },
+      {
+        "threshold": 0.5,
+        "accepted": 9561,
+        "rejected": 439,
+        "coverage": 0.9561,
+        "accuracy": 0.8957222047902939,
+        "macro_recall_counting_rejections_as_misses": 0.8564
+      },
+      {
+        "threshold": 0.7,
+        "accepted": 8716,
+        "rejected": 1284,
+        "coverage": 0.8716,
+        "accuracy": 0.9284075263882515,
+        "macro_recall_counting_rejections_as_misses": 0.8091999999999999
+      },
+      {
+        "threshold": 0.8,
+        "accepted": 8236,
+        "rejected": 1764,
+        "coverage": 0.8236,
+        "accuracy": 0.9448761534725595,
+        "macro_recall_counting_rejections_as_misses": 0.7782
+      },
+      {
+        "threshold": 0.9,
+        "accepted": 7602,
+        "rejected": 2398,
+        "coverage": 0.7602,
+        "accuracy": 0.9625098658247829,
+        "macro_recall_counting_rejections_as_misses": 0.7316999999999999
+      },
+      {
+        "threshold": 0.95,
+        "accepted": 7060,
+        "rejected": 2940,
+        "coverage": 0.706,
+        "accuracy": 0.9735127478753541,
+        "macro_recall_counting_rejections_as_misses": 0.6873
+      },
+      {
+        "threshold": 0.99,
+        "accepted": 5993,
+        "rejected": 4007,
+        "coverage": 0.5993,
+        "accuracy": 0.9866510929417653,
+        "macro_recall_counting_rejections_as_misses": 0.5913
+      }
+    ],
+    "negative_log_likelihood": 0.4072363736431115,
+    "brier_score": 0.18803619277388597,
+    "expected_calibration_error": 0.03982376513842477,
+    "calibration_bins": 15,
+    "mean_confidence": 0.9119841169807689,
+    "mean_confidence_correct": 0.9442479344883931,
+    "mean_confidence_wrong": 0.6909997593893014,
+    "per_class": [
+      {
+        "index": 0,
+        "name": "airplane",
+        "support": 1000,
+        "predicted_count": 1056,
+        "true_positive": 903,
+        "false_positive": 153,
+        "false_negative": 97,
+        "true_negative": 8847,
+        "precision": 0.8551136363636364,
+        "recall": 0.903,
+        "f1": 0.8784046692607005,
+        "specificity": 0.983,
+        "roc_auc_ovr": 0.9926684444444445,
+        "average_precision_ovr": 0.9476399100921982
+      },
+      {
+        "index": 1,
+        "name": "automobile",
+        "support": 1000,
+        "predicted_count": 1071,
+        "true_positive": 966,
+        "false_positive": 105,
+        "false_negative": 34,
+        "true_negative": 8895,
+        "precision": 0.9019607843137255,
+        "recall": 0.966,
+        "f1": 0.9328826653790439,
+        "specificity": 0.9883333333333333,
+        "roc_auc_ovr": 0.9975196666666668,
+        "average_precision_ovr": 0.9868335973200733
+      },
+      {
+        "index": 2,
+        "name": "bird",
+        "support": 1000,
+        "predicted_count": 934,
+        "true_positive": 797,
+        "false_positive": 137,
+        "false_negative": 203,
+        "true_negative": 8863,
+        "precision": 0.8533190578158458,
+        "recall": 0.797,
+        "f1": 0.8241985522233711,
+        "specificity": 0.9847777777777778,
+        "roc_auc_ovr": 0.983576888888889,
+        "average_precision_ovr": 0.9108668749541886
+      },
+      {
+        "index": 3,
+        "name": "cat",
+        "support": 1000,
+        "predicted_count": 944,
+        "true_positive": 721,
+        "false_positive": 223,
+        "false_negative": 279,
+        "true_negative": 8777,
+        "precision": 0.763771186440678,
+        "recall": 0.721,
+        "f1": 0.7417695473251029,
+        "specificity": 0.9752222222222222,
+        "roc_auc_ovr": 0.9714933333333333,
+        "average_precision_ovr": 0.8414688083237305
+      },
+      {
+        "index": 4,
+        "name": "deer",
+        "support": 1000,
+        "predicted_count": 977,
+        "true_positive": 861,
+        "false_positive": 116,
+        "false_negative": 139,
+        "true_negative": 8884,
+        "precision": 0.8812691914022518,
+        "recall": 0.861,
+        "f1": 0.8710166919575114,
+        "specificity": 0.9871111111111112,
+        "roc_auc_ovr": 0.9907603333333332,
+        "average_precision_ovr": 0.9406755312833661
+      },
+      {
+        "index": 5,
+        "name": "dog",
+        "support": 1000,
+        "predicted_count": 994,
+        "true_positive": 811,
+        "false_positive": 183,
+        "false_negative": 189,
+        "true_negative": 8817,
+        "precision": 0.8158953722334004,
+        "recall": 0.811,
+        "f1": 0.8134403209628887,
+        "specificity": 0.9796666666666667,
+        "roc_auc_ovr": 0.983944,
+        "average_precision_ovr": 0.8996338084140553
+      },
+      {
+        "index": 6,
+        "name": "frog",
+        "support": 1000,
+        "predicted_count": 1037,
+        "true_positive": 922,
+        "false_positive": 115,
+        "false_negative": 78,
+        "true_negative": 8885,
+        "precision": 0.8891031822565092,
+        "recall": 0.922,
+        "f1": 0.9052528227785961,
+        "specificity": 0.9872222222222222,
+        "roc_auc_ovr": 0.9945723333333334,
+        "average_precision_ovr": 0.9650189978541872
+      },
+      {
+        "index": 7,
+        "name": "horse",
+        "support": 1000,
+        "predicted_count": 993,
+        "true_positive": 899,
+        "false_positive": 94,
+        "false_negative": 101,
+        "true_negative": 8906,
+        "precision": 0.905337361530715,
+        "recall": 0.899,
+        "f1": 0.902157551430005,
+        "specificity": 0.9895555555555555,
+        "roc_auc_ovr": 0.9953106666666667,
+        "average_precision_ovr": 0.9679446340333601
+      },
+      {
+        "index": 8,
+        "name": "ship",
+        "support": 1000,
+        "predicted_count": 978,
+        "true_positive": 920,
+        "false_positive": 58,
+        "false_negative": 80,
+        "true_negative": 8942,
+        "precision": 0.9406952965235174,
+        "recall": 0.92,
+        "f1": 0.9302325581395349,
+        "specificity": 0.9935555555555555,
+        "roc_auc_ovr": 0.9965214444444445,
+        "average_precision_ovr": 0.9794816245079616
+      },
+      {
+        "index": 9,
+        "name": "truck",
+        "support": 1000,
+        "predicted_count": 1016,
+        "true_positive": 926,
+        "false_positive": 90,
+        "false_negative": 74,
+        "true_negative": 8910,
+        "precision": 0.9114173228346457,
+        "recall": 0.926,
+        "f1": 0.9186507936507937,
+        "specificity": 0.99,
+        "roc_auc_ovr": 0.9963727777777778,
+        "average_precision_ovr": 0.978066008388932
+      }
+    ],
+    "confusion_matrix": [
+      [
+        903,
+        16,
+        21,
+        10,
+        4,
+        0,
+        1,
+        1,
+        25,
+        19
+      ],
+      [
+        4,
+        966,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        4,
+        26
+      ],
+      [
+        46,
+        3,
+        797,
+        28,
+        36,
+        20,
+        43,
+        14,
+        5,
+        8
+      ],
+      [
+        17,
+        12,
+        36,
+        721,
+        39,
+        107,
+        32,
+        19,
+        9,
+        8
+      ],
+      [
+        12,
+        2,
+        25,
+        20,
+        861,
+        19,
+        25,
+        31,
+        3,
+        2
+      ],
+      [
+        5,
+        3,
+        22,
+        103,
+        17,
+        811,
+        8,
+        27,
+        1,
+        3
+      ],
+      [
+        4,
+        0,
+        23,
+        34,
+        5,
+        5,
+        922,
+        1,
+        3,
+        3
+      ],
+      [
+        15,
+        0,
+        9,
+        20,
+        14,
+        32,
+        0,
+        899,
+        1,
+        10
+      ],
+      [
+        37,
+        19,
+        1,
+        6,
+        1,
+        0,
+        5,
+        0,
+        920,
+        11
+      ],
+      [
+        13,
+        50,
+        0,
+        2,
+        0,
+        0,
+        1,
+        1,
+        7,
+        926
+      ]
+    ],
+    "largest_confusions": [
+      {
+        "actual": "cat",
+        "predicted": "dog",
+        "count": 107,
+        "fraction_of_actual": 0.107
+      },
+      {
+        "actual": "dog",
+        "predicted": "cat",
+        "count": 103,
+        "fraction_of_actual": 0.103
+      },
+      {
+        "actual": "truck",
+        "predicted": "automobile",
+        "count": 50,
+        "fraction_of_actual": 0.05
+      },
+      {
+        "actual": "bird",
+        "predicted": "airplane",
+        "count": 46,
+        "fraction_of_actual": 0.046
+      },
+      {
+        "actual": "bird",
+        "predicted": "frog",
+        "count": 43,
+        "fraction_of_actual": 0.043
+      },
+      {
+        "actual": "cat",
+        "predicted": "deer",
+        "count": 39,
+        "fraction_of_actual": 0.039
+      },
+      {
+        "actual": "ship",
+        "predicted": "airplane",
+        "count": 37,
+        "fraction_of_actual": 0.037
+      },
+      {
+        "actual": "bird",
+        "predicted": "deer",
+        "count": 36,
+        "fraction_of_actual": 0.036
+      },
+      {
+        "actual": "cat",
+        "predicted": "bird",
+        "count": 36,
+        "fraction_of_actual": 0.036
+      },
+      {
+        "actual": "frog",
+        "predicted": "cat",
+        "count": 34,
+        "fraction_of_actual": 0.034
+      }
+    ],
+    "reliability_bins": [
+      {
+        "lower": 0.0,
+        "upper": 0.06666666666666667,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lower": 0.06666666666666667,
+        "upper": 0.13333333333333333,
+        "count": 0,
+        "confidence": null,
+        "accuracy": null
+      },
+      {
+        "lower": 0.13333333333333333,
+        "upper": 0.2,
+        "count": 1,
+        "confidence": 0.17618751494222812,
+        "accuracy": 1.0
+      },
+      {
+        "lower": 0.2,
+        "upper": 0.26666666666666666,
+        "count": 15,
+        "confidence": 0.24409092488697703,
+        "accuracy": 0.26666666666666666
+      },
+      {
+        "lower": 0.26666666666666666,
+        "upper": 0.3333333333333333,
+        "count": 49,
+        "confidence": 0.31293477773076367,
+        "accuracy": 0.30612244897959184
+      },
+      {
+        "lower": 0.3333333333333333,
+        "upper": 0.4,
+        "count": 111,
+        "confidence": 0.3690469173285913,
+        "accuracy": 0.3783783783783784
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.4666666666666667,
+        "count": 169,
+        "confidence": 0.43523904277865566,
+        "accuracy": 0.34911242603550297
+      },
+      {
+        "lower": 0.4666666666666667,
+        "upper": 0.5333333333333333,
+        "count": 240,
+        "confidence": 0.5053442009157473,
+        "accuracy": 0.475
+      },
+      {
+        "lower": 0.5333333333333333,
+        "upper": 0.6,
+        "count": 270,
+        "confidence": 0.5669345167408677,
+        "accuracy": 0.5333333333333333
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.6666666666666666,
+        "count": 295,
+        "confidence": 0.6346535048541769,
+        "accuracy": 0.5898305084745763
+      },
+      {
+        "lower": 0.6666666666666666,
+        "upper": 0.7333333333333333,
+        "count": 285,
+        "confidence": 0.7016505901991149,
+        "accuracy": 0.6175438596491228
+      },
+      {
+        "lower": 0.7333333333333333,
+        "upper": 0.8,
+        "count": 329,
+        "confidence": 0.7668954730158851,
+        "accuracy": 0.6534954407294833
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.8666666666666667,
+        "count": 369,
+        "confidence": 0.8342789286221693,
+        "accuracy": 0.7100271002710027
+      },
+      {
+        "lower": 0.8666666666666667,
+        "upper": 0.9333333333333333,
+        "count": 591,
+        "confidence": 0.9028958282754296,
+        "accuracy": 0.7901861252115059
+      },
+      {
+        "lower": 0.9333333333333333,
+        "upper": 1.0,
+        "count": 7276,
+        "confidence": 0.9937923458747167,
+        "accuracy": 0.9693512919186366
+      }
+    ],
+    "averaging_notes": "Macro includes all named classes; zero denominators give 0. Balanced accuracy averages supported classes. Micro recall equals accuracy for single-label multiclass classification.",
+    "calibration_notes": "Softmax of raw logits, without calibration fitted to the test set. ECE uses equal-width confidence bins. Multiclass Brier score sums across classes (range 0..2).",
+    "interval_notes": "Wilson binomial approximation for accuracy; does not measure training-run variation or distribution shift.",
+    "ranking_notes": "One-vs-rest ranking uses softmax probabilities with tied scores grouped. Undefined classes are excluded from ranking macro means and reported as null.",
+    "selective_notes": "Fixed descriptive thresholds; not tuned for deployment. Accepted-set accuracy must be read with coverage and recall counting rejected examples as misses."
+  }
+}

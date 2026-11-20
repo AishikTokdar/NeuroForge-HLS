@@ -3,6 +3,8 @@ GPU vs FPGA Architecture Decision Analysis Script
 Computes latency, throughput, power, and energy efficiency comparison.
 """
 def generate_comparison_table():
+    print("ILLUSTRATIVE LEGACY VALUES ONLY: no supporting synthesis, power, or labeled accuracy reports are bundled.")
+    print("This table is not produced by a benchmark; GPU TDP and modeled FPGA power are not comparable measurements.\n")
     metrics = [
         ("Inference Latency", "1.25 ms", "12.4 ms (Fabric) / 24.8 ms (System)", "GPU (9.9x / 19.8x)"),
         ("Throughput", "800 img/s", "80.6 img/s (HLS) / 40.3 img/s (DDR)", "GPU (9.9x / 19.8x)"),
