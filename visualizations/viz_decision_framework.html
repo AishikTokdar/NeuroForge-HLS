@@ -1,392 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge-HLS: GPU vs FPGA Decision Framework</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
-            font-size: 16px;
-        }
-        .flowchart {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .decision-node {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border: 3px solid #ff9800;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
-        .decision-question {
-            font-weight: bold;
-            font-size: 16px;
-            color: #e65100;
-            margin-bottom: 10px;
-        }
-        .decision-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .option-button {
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .option-button:hover {
-            transform: scale(1.02);
-        }
-        .option-yes {
-            background: #e8f5e9;
-            border: 2px solid #4CAF50;
-            color: #2e7d32;
-        }
-        .option-no {
-            background: #ffebee;
-            border: 2px solid #f44336;
-            color: #c62828;
-        }
-        .result-node {
-            padding: 25px;
-            border-radius: 12px;
-            border: 3px solid;
-            margin: 20px 0;
-        }
-        .result-gpu {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-color: #4CAF50;
-        }
-        .result-fpga {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-color: #2196F3;
-        }
-        .result-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .result-gpu .result-title {
-            color: #2e7d32;
-        }
-        .result-fpga .result-title {
-            color: #1565c0;
-        }
-        .result-reasons {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0;
-        }
-        .result-reasons li {
-            padding: 8px 0;
-            padding-left: 30px;
-            position: relative;
-            line-height: 1.6;
-        }
-        .result-reasons li:before {
-            content: "✓";
-            position: absolute;
-            left: 5px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .result-gpu .result-reasons li:before {
-            color: #4CAF50;
-        }
-        .result-fpga .result-reasons li:before {
-            color: #2196F3;
-        }
-        .criteria-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .criteria-card {
-            background: #fafafa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-        }
-        .criteria-card h3 {
-            margin-top: 0;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        .criteria-card.gpu-card {
-            border-color: #4CAF50;
-        }
-        .criteria-card.gpu-card h3 {
-            color: #2e7d32;
-        }
-        .criteria-card.fpga-card {
-            border-color: #2196F3;
-        }
-        .criteria-card.fpga-card h3 {
-            color: #1565c0;
-        }
-        .criteria-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .criteria-list li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-            font-size: 14px;
-            line-height: 1.5;
-            color: #333;
-        }
-        .criteria-list li:before {
-            content: "→";
-            position: absolute;
-            left: 5px;
-            color: #666;
-        }
-        .arrow {
-            text-align: center;
-            font-size: 24px;
-            color: #999;
-            margin: 10px 0;
-        }
-        .quick-decision {
-            background: #f3e5f5;
-            border-left: 4px solid #9c27b0;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 4px;
-        }
-        .quick-decision h3 {
-            margin-top: 0;
-            color: #6a1b9a;
-        }
-        .quick-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .quick-table th {
-            background: #6a1b9a;
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-        .quick-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 14px;
-        }
-        .quick-table tr:last-child td {
-            border-bottom: none;
-        }
-        .quick-table .requirement {
-            font-weight: 500;
-            color: #333;
-        }
-        .quick-table .choice {
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div style="max-width: 1000px; margin: 0 auto; padding: 20px 20px 0;">
-        <a href="../index.html" style="display: inline-block; padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-family: 'Inter', -apple-system, sans-serif; transition: background 0.2s;">&larr; Back to Home</a>
-    </div>
-    <div class="container">
-        <h1>GPU vs FPGA Decision Framework</h1>
-        <p class="subtitle">NeuroForge-HLS Model Optimization Guide | Developed by Aishik Tokdar</p>
-
-        <div class="quick-decision">
-            <h3>⚡ Quick Decision Table</h3>
-            <table class="quick-table">
-                <thead>
-                    <tr>
-                        <th>Your Requirement</th>
-                        <th>Recommended Choice</th>
-                        <th>Why</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="requirement">Sub-5ms latency needed</td>
-                        <td class="choice" style="color: #4CAF50;">GPU</td>
-                        <td>9.9× faster in this comparison</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Power budget &lt;5W</td>
-                        <td class="choice" style="color: #2196F3;">FPGA</td>
-                        <td>48.3× lower power consumption</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Batch processing acceptable</td>
-                        <td class="choice" style="color: #4CAF50;">GPU</td>
-                        <td>Throughput scales well with batching</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Deterministic latency required</td>
-                        <td class="choice" style="color: #2196F3;">FPGA</td>
-                        <td>Zero jitter, consistent timing</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Model &gt;10M parameters</td>
-                        <td class="choice" style="color: #4CAF50;">GPU</td>
-                        <td>FPGA memory constraints</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Edge deployment (1000+ units)</td>
-                        <td class="choice" style="color: #2196F3;">FPGA</td>
-                        <td>Lower cost at scale</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Custom sensor preprocessing</td>
-                        <td class="choice" style="color: #2196F3;">FPGA</td>
-                        <td>Integrated pipeline on single chip</td>
-                    </tr>
-                    <tr>
-                        <td class="requirement">Need training + inference</td>
-                        <td class="choice" style="color: #4CAF50;">GPU</td>
-                        <td>FPGA inference-only</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="flowchart">
-            <div class="decision-node">
-                <div class="decision-question">📊 Can you embed model weights in FPGA BRAM?</div>
-                <div style="font-size: 13px; color: #666; margin-top: 5px;">
-                    (Model &lt;2MB, infrequent updates)
-                </div>
-                <div class="decision-options">
-                    <div class="option-button option-yes">YES → Continue to next question</div>
-                    <div class="option-button option-no">NO → Choose GPU</div>
-                </div>
-            </div>
-
-            <div class="arrow">↓</div>
-
-            <div class="decision-node">
-                <div class="decision-question">⚡ Do you have steady power supply?</div>
-                <div style="font-size: 13px; color: #666; margin-top: 5px;">
-                    (AC power or large battery)
-                </div>
-                <div class="decision-options">
-                    <div class="option-button option-yes">YES → Choose GPU</div>
-                    <div class="option-button option-no">NO → Continue to next question</div>
-                </div>
-            </div>
-
-            <div class="arrow">↓</div>
-
-            <div class="decision-node">
-                <div class="decision-question">🎯 Need deterministic latency &lt;10ms?</div>
-                <div style="font-size: 13px; color: #666; margin-top: 5px;">
-                    (Real-time control, safety-critical)
-                </div>
-                <div class="decision-options">
-                    <div class="option-button option-yes">YES → Choose FPGA</div>
-                    <div class="option-button option-no">NO → Consider both based on other factors</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="criteria-grid">
-            <div class="criteria-card gpu-card">
-                <h3>🚀 Choose GPU If:</h3>
-                <ul class="criteria-list">
-                    <li>You have steady power supply (AC or large battery)</li>
-                    <li>Batch processing is acceptable</li>
-                    <li>You want the easiest development path</li>
-                    <li>Sub-5ms latency matters</li>
-                    <li>You need training + inference on same hardware</li>
-                    <li>Model has >10M parameters</li>
-                    <li>You can tolerate latency variability</li>
-                    <li>Time-to-market is critical</li>
-                    <li>Team lacks FPGA expertise</li>
-                </ul>
-            </div>
-
-            <div class="criteria-card fpga-card">
-                <h3>⚡ Choose FPGA If:</h3>
-                <ul class="criteria-list">
-                    <li>Power budget is &lt;5W (battery-powered edge)</li>
-                    <li>You can embed model weights in BRAM</li>
-                    <li>You need deterministic latency (zero jitter)</li>
-                    <li>You're integrating custom sensor preprocessing</li>
-                    <li>Deploying thousands of units (cost at scale)</li>
-                    <li>Model weights fit in &lt;2MB</li>
-                    <li>Infrequent model updates acceptable</li>
-                    <li>Team has FPGA design expertise</li>
-                    <li>Development time is flexible</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="result-node result-gpu">
-            <div class="result-title">🚀 GPU Winner Scenarios</div>
-            <ul class="result-reasons">
-                <li><strong>Cloud/datacenter inference:</strong> Power available, need max throughput</li>
-                <li><strong>Research & development:</strong> Fast iteration, easy debugging</li>
-                <li><strong>Large models:</strong> BERT, GPT-style transformers (&gt;100M params)</li>
-                <li><strong>Training + inference:</strong> Same hardware for both workloads</li>
-                <li><strong>Batch processing:</strong> Process 100s of images together</li>
-            </ul>
-        </div>
-
-        <div class="result-node result-fpga">
-            <div class="result-title">⚡ FPGA Winner Scenarios</div>
-            <ul class="result-reasons">
-                <li><strong>Autonomous drones:</strong> 1-2W power budget, deterministic latency</li>
-                <li><strong>IoT edge devices:</strong> Battery-powered, low-bandwidth networks</li>
-                <li><strong>Medical devices:</strong> Deterministic behavior, custom sensor fusion</li>
-                <li><strong>Industrial control:</strong> Real-time guarantees, harsh environments</li>
-                <li><strong>Smart cameras:</strong> Integrated ISP + inference on single chip</li>
-            </ul>
-        </div>
-
-        <div class="quick-decision" style="background: #fff3e0; border-color: #ff9800;">
-            <h3 style="color: #e65100;">⚠️ Don't Choose FPGA If:</h3>
-            <ul class="criteria-list" style="margin-top: 15px;">
-                <li>You need frequent model updates (daily/weekly)</li>
-                <li>Your model has &gt;10M parameters</li>
-                <li>You don't have FPGA expertise in-house</li>
-                <li>Time-to-market is critical (&lt;3 months)</li>
-                <li>You want to use standard ML frameworks (PyTorch/TensorFlow)</li>
-                <li>Sub-millisecond latency is required</li>
-                <li>You need to support multiple model architectures</li>
-            </ul>
-        </div>
-    </div>
-</body>
-</html>
+<!doctype html>
+<html lang="en" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore the ReducedVGG architecture, Q12.4 arithmetic, measured CIFAR-10 results and verification behind NeuroForge-HLS.">
+<meta name="color-scheme" content="light dark">
+<title>Verification &amp; toolchain · NeuroForge-HLS</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="preload" as="fetch" href="../docs/classification_metrics.json" crossorigin data-dataset="metrics"><link rel="preload" as="fetch" href="../docs/training_metrics.json" crossorigin data-dataset="training"><link rel="preload" as="fetch" href="../docs/numeric_range_audit.json" crossorigin data-dataset="ranges"><link rel="preload" as="fetch" href="../docs/weight_validation.json" crossorigin data-dataset="verification">
+<script src="../assets/site.js" defer></script>
+</head><body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap top-inner">
+<a class="brand" href="../index.html" aria-label="NeuroForge-HLS home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>NEUROFORGE <small>/ HLS</small></a>
+<nav class="nav" id="main-nav" aria-label="Main navigation">
+<a href="../index.html#overview">Overview</a><a href="../index.html#architecture">Architecture</a><a href="../index.html#tiling">Lab</a><a href="../index.html#results">Results</a><a href="../index.html#verification">Verification</a><a href="../index.html#project">Project</a>
+</nav>
+<button class="theme-button" id="theme-toggle" type="button" aria-label="Switch to dark mode"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.2A7 7 0 0 1 7.8 3.2 7 7 0 1 0 16.8 12.2Z"/></svg><span id="theme-label">Dark</span></button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<button class="menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+</div></header>
+<main class="wrap" id="main">
+<div id="data-notice" class="data-notice" role="status" hidden><p id="data-message">Recorded results could not be loaded.</p><button class="button" id="retry-data" type="button">Reload results</button></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<noscript><p class="data-notice">JavaScript is needed for the interactive visualizers. The measured summary and project documentation remain available below.</p></noscript>
+<div class="topic-hero"><a class="backlink" href="../index.html">← Project overview</a><h1>Verification &amp; toolchain</h1><p>A guide to the evidence behind the project and the tools needed to go from software to a physical FPGA.</p></div><section class="section" id="verification"><div class="section-head"><div><div class="section-title"><span class="section-no">07</span><h2>What the evidence establishes.</h2></div><p class="section-intro">A working software pipeline is a useful milestone. Hardware readiness is a separate claim, with separate checks.</p></div><span class="badge ">Verification scope</span></div>
+<dl class="verification-list">
+<div><dt>C++ functional inference</dt><dd>All 10,000 class predictions matched the PyTorch reference. Maximum absolute logit difference: 0.0000190735.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Trained weight exports</dt><dd>FP32, genuine Q16.16 integers and Q12.4 parameters were reloaded and checked. Both model checkpoints and hashes are retained.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Standalone golden vector</dt><dd>A real CIFAR-10 cat image, ten nonzero logits, MSE 2.09894e−12 and 0/10 output errors.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Fixed-point numerical behavior</dt><dd>Quantization-aware evaluation and cast-range audits are approximate software models. Vendor math and default wrap behavior still need direct simulation.</dd><span class="badge">Approximate</span></div>
+<div><dt>RTL, timing and resources</dt><dd>Vitis synthesis, C/RTL co-simulation, routed timing and physical resource reports have not been run. The Zynq-7020 is a target, not a tested deployment.</dd><span class="badge pending">Pending</span></div>
+<div><dt>Board and system integration</dt><dd>No physical board run, measured power, DDR trace or complete board host driver is claimed.</dd><span class="badge pending">Not tested</span></div></dl>
+<p class="annotation"><a href="../README.md#software-verification-and-findings">Read verification details in README ↗</a> · <a href="../README.md#numeric-range-audit">Numeric-range audit in README ↗</a></p>
+</section><section class="section" id="toolchain"><div class="section-head"><div><div class="section-title"><span class="section-no">T</span><h2>Choose the right verification step.</h2></div><p class="section-intro">Different questions require different evidence. Select the claim you want to establish.</p></div><span class="badge ">Toolchain guide</span></div><div class="panel panel-pad"><div class="control" style="max-width:480px"><label for="verification-goal">What do you want to verify?</label><select id="verification-goal"><option value="host">Software inference and classification</option><option value="fixed">AMD fixed-point numerical behavior</option><option value="rtl">Generated RTL matches the C++ design</option><option value="device">Timing, resources and board operation</option></select></div><div id="verification-answer" class="annotation" aria-live="polite"></div></div></section><section class="section" id="project"><div class="section-head"><div><div class="section-title"><span class="section-no">08</span><h2>The project, beyond the charts.</h2></div><p class="section-intro">NeuroForge-HLS connects a trained image classifier to a hardware-oriented C++ implementation. It is a reproducible software study of that boundary.</p></div><span class="badge ">Project information</span></div>
+<div class="project-grid"><div><h3>A ReducedVGG accelerator study.</h3><p>The network accepts normalized 32×32 RGB images from CIFAR-10 and produces ten class scores. Convolution uses spatial tiles and small output-channel groups, with BatchNorm, ReLU, pooling and fully connected layers implemented in C++.</p><p>The original all-zero weight exports were replaced with a newly trained model. Export formats, quantization checks, golden-vector generation and repeatable validation are included in the repository.</p>
+<dl class="specs"><div><dt>Target device</dt><dd style="font-size:14px">XC7Z020CLG400-1</dd></div><div><dt>Clock constraint</dt><dd style="font-size:14px">15 ns · not closed timing</dd></div><div><dt>Feature / weight type</dt><dd style="font-size:14px">ap_fixed&lt;16,12&gt;</dd></div><div><dt>Accumulator</dt><dd style="font-size:14px">ap_fixed&lt;32,24&gt;</dd></div></dl>
+<p class="annotation">BatchNorm intermediates use ap_fixed&lt;48,24&gt; to keep epsilon representable. The NO_HLS build uses floating-point arithmetic. No browser-side model inference is performed on this site.</p>
+<div class="code-head"><span class="label">Run the host simulation</span><button class="text-button" id="copy-command" type="button">Copy command</button></div><pre class="code-block" id="run-command">python hls/tb_standalone_runner.py</pre><span id="copy-status" class="status-text" role="status"></span></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<div><h3>Data, checkpoints and reproducibility.</h3><ul class="download-list">
+<li><a href="../weights/reduced_vgg_retrained.pth" download>Quantization-aware checkpoint <span>PYTORCH ↗</span></a></li>
+<li><a href="../weights/reduced_vgg_fp32.pth" download>Floating-point baseline checkpoint <span>PYTORCH ↗</span></a></li>
+<li><a href="../docs/classification_metrics.json" download>Complete classification metrics <span>JSON ↗</span></a></li>
+<li><a href="../docs/classification_metrics.csv" download>Class-level precision, recall and F1 <span>CSV ↗</span></a></li>
+<li><a href="../docs/training_metrics.json" download>Training history and final evaluation <span>JSON ↗</span></a></li>
+<li><a href="../weights/export_manifest.json" download>Checkpoint and export hashes <span>SHA-256 ↗</span></a></li>
+<li><a href="../README.md">Setup and reproduction guide <span>README ↗</span></a></li></ul>
+<p class="annotation"><strong>Author:</strong> Aishik Tokdar. <strong>License:</strong> MIT. CIFAR-10 has 50,000 training and 10,000 test images; this run held out 5,000 training images for validation. <a href="https://www.cs.toronto.edu/~kriz/cifar.html">Dataset source ↗</a></p>
+</div></div></section></main><footer class="site-footer"><div class="wrap"><div class="footer-inner"><div class="brand">NEUROFORGE <small>/ HLS</small></div><div class="footer-links">
+<a href="../visualizations/viz_performance_comparison.html">Results</a><a href="../visualizations/viz_memory_architecture.html">Memory & tiling</a><a href="../visualizations/viz_decision_framework.html">Toolchain</a><a href="../visualizations/viz_resource_utilization.html">Numeric ranges</a><a href="../visualizations/viz_design_workflow.html">Workflow</a>
+</div></div><div class="footer-bottom"><span>© 2026 Aishik Tokdar · <a href="../LICENSE">MIT License</a></span><span><a href="https://github.com/AishikTokdar/NeuroForge-HLS">Source on GitHub ↗</a> &nbsp; <button class="text-button" id="theme-system" type="button">Use system theme</button></span></div></div></footer></body></html> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->

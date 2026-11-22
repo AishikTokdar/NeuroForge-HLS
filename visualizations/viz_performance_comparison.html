@@ -1,233 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge-HLS: Performance Comparison</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .chart-container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #1a1a1a;
-            margin-top: 0;
-            font-size: 24px;
-        }
-        .subtitle {
-            color: #666;
-            font-size: 14px;
-            margin-top: -10px;
-            margin-bottom: 20px;
-        }
-        canvas {
-            max-height: 400px;
-        }
-    </style>
-</head>
-<body>
-    <div style="max-width: 1000px; margin: 0 auto; padding: 20px 20px 0;">
-        <a href="../index.html" style="display: inline-block; padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-family: 'Inter', -apple-system, sans-serif; transition: background 0.2s;">&larr; Back to Home</a>
-    </div>
-    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; text-align: center;">
-        <h1 style="margin: 0; color: #1a1a1a; font-size: 28px;">NeuroForge-HLS: Performance Comparison</h1>
-        <p style="margin: 8px 0 0 0; color: #666; font-size: 16px; font-weight: 500;">Developed by Aishik Tokdar | Software-Only Simulation Performance Modeling</p>
-    </div>
-    <div class="chart-container">
-        <h2>Latency & Throughput Comparison</h2>
-        <p class="subtitle">Lower latency and higher throughput are better</p>
-        <canvas id="latencyChart"></canvas>
-    </div>
-
-    <div class="chart-container">
-        <h2>Power & Energy Efficiency</h2>
-        <p class="subtitle">Power consumption and energy per inference</p>
-        <canvas id="powerChart"></canvas>
-    </div>
-
-    <div class="chart-container">
-        <h2>Performance Score (Accuracy/Latency)</h2>
-        <p class="subtitle">Higher is better - GPU achieves 68.47 acc/ms vs HLS 6.90 acc/ms, while FPGA wins by 4.86× in energy efficiency</p>
-        <canvas id="scoreChart"></canvas>
-    </div>
-
-    <script>
-        // Chart.js default configuration
-        Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
-        Chart.defaults.font.size = 13;
-
-        // Latency & Throughput Chart
-        const latencyCtx = document.getElementById('latencyChart').getContext('2d');
-        new Chart(latencyCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Latency (ms)', 'Throughput (img/s)'],
-                datasets: [{
-                    label: 'GPU (Tesla T4)',
-                    data: [1.25, 800.0],
-                    backgroundColor: 'rgba(76, 175, 80, 0.8)',
-                    borderColor: 'rgba(76, 175, 80, 1)',
-                    borderWidth: 2
-                }, {
-                    label: 'HLS Simulator (Zynq-7020)',
-                    data: [12.4, 80.6],
-                    backgroundColor: 'rgba(33, 150, 243, 0.8)',
-                    borderColor: 'rgba(33, 150, 243, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += context.parsed.y.toFixed(2);
-                                if (context.dataIndex === 0) {
-                                    label += ' ms';
-                                } else {
-                                    label += ' img/s';
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value.toFixed(0);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Power Chart
-        const powerCtx = document.getElementById('powerChart').getContext('2d');
-        new Chart(powerCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Power (W)', 'Energy/Inference (J)'],
-                datasets: [{
-                    label: 'GPU (Tesla T4)',
-                    data: [70, 0.0875],
-                    backgroundColor: 'rgba(76, 175, 80, 0.8)',
-                    borderColor: 'rgba(76, 175, 80, 1)',
-                    borderWidth: 2
-                }, {
-                    label: 'HLS Simulator (Zynq-7020)',
-                    data: [1.45, 0.0180],
-                    backgroundColor: 'rgba(33, 150, 243, 0.8)',
-                    borderColor: 'rgba(33, 150, 243, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += context.parsed.y.toFixed(4);
-                                if (context.dataIndex === 0) {
-                                    label += ' W';
-                                } else {
-                                    label += ' J';
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Performance Score Chart
-        const scoreCtx = document.getElementById('scoreChart').getContext('2d');
-        new Chart(scoreCtx, {
-            type: 'bar',
-            data: {
-                labels: ['GPU (Tesla T4)', 'HLS Simulator (Zynq-7020)'],
-                datasets: [{
-                    label: 'Score (Accuracy/Latency)',
-                    data: [68.47, 6.90],
-                    backgroundColor: [
-                        'rgba(76, 175, 80, 0.8)',
-                        'rgba(33, 150, 243, 0.8)',
-                        'rgba(255, 152, 0, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(76, 175, 80, 1)',
-                        'rgba(33, 150, 243, 1)',
-                        'rgba(255, 152, 0, 1)'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Score: ' + context.parsed.y.toFixed(2) + ' acc/ms';
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Accuracy / Latency (acc/ms)'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+<!doctype html>
+<html lang="en" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore the ReducedVGG architecture, Q12.4 arithmetic, measured CIFAR-10 results and verification behind NeuroForge-HLS.">
+<meta name="color-scheme" content="light dark">
+<title>Measured results · NeuroForge-HLS</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="preload" as="fetch" href="../docs/classification_metrics.json" crossorigin data-dataset="metrics"><link rel="preload" as="fetch" href="../docs/training_metrics.json" crossorigin data-dataset="training"><link rel="preload" as="fetch" href="../docs/numeric_range_audit.json" crossorigin data-dataset="ranges"><link rel="preload" as="fetch" href="../docs/weight_validation.json" crossorigin data-dataset="verification">
+<script src="../assets/site.js" defer></script>
+</head><body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap top-inner">
+<a class="brand" href="../index.html" aria-label="NeuroForge-HLS home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>NEUROFORGE <small>/ HLS</small></a>
+<nav class="nav" id="main-nav" aria-label="Main navigation">
+<a href="../index.html#overview">Overview</a><a href="../index.html#architecture">Architecture</a><a href="../index.html#tiling">Lab</a><a href="../index.html#results">Results</a><a href="../index.html#verification">Verification</a><a href="../index.html#project">Project</a>
+</nav>
+<button class="theme-button" id="theme-toggle" type="button" aria-label="Switch to dark mode"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.2A7 7 0 0 1 7.8 3.2 7 7 0 1 0 16.8 12.2Z"/></svg><span id="theme-label">Dark</span></button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<button class="menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+</div></header>
+<main class="wrap" id="main">
+<div id="data-notice" class="data-notice" role="status" hidden><p id="data-message">Recorded results could not be loaded.</p><button class="button" id="retry-data" type="button">Reload results</button></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<noscript><p class="data-notice">JavaScript is needed for the interactive visualizers. The measured summary and project documentation remain available below.</p></noscript>
+<div class="topic-hero"><a class="backlink" href="../index.html">← Project overview</a><h1>Measured results</h1><p>Classification, class-level errors and the tradeoff between confidence and coverage. All scores here come from recorded test predictions.</p></div><section class="section" id="results"><div class="section-head"><div><div class="section-title"><span class="section-no">03</span><h2>Results you can inspect.</h2></div><p class="section-intro">10,000 held-out CIFAR-10 images, 1,000 per class. These are the actual C++ predictions, compared with an independent PyTorch reference.</p></div><span class="badge measured">Measured · software</span></div>
+<dl class="result-summary"><div><dt>Macro precision</dt><dd data-result="macro_precision">87.18%</dd></div><div><dt>Macro F1</dt><dd data-result="macro_f1">87.18%</dd></div><div><dt>Top-3 accuracy</dt><dd>98.00%</dd></div><div><dt>Macro ROC-AUC</dt><dd data-result="macro_roc_auc_ovr">0.99027</dd></div></dl>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Performance by class</h3><small>SUPPORT / 1,000 EACH</small></div>
+<fieldset data-from-records disabled><legend class="sr-only">Class metric controls</legend><div class="controls"><div class="control"><label for="class-metric">Metric</label><select id="class-metric"><option value="recall">Recall</option><option value="precision">Precision</option><option value="f1">F1 score</option></select></div><div class="control"><label for="class-sort">Order</label><select id="class-sort"><option value="class">Class order</option><option value="lowest">Lowest first</option><option value="highest">Highest first</option></select></div></div>
+<div id="class-bars" class="metric-bars" aria-label="Per-class metrics"><p class="loading">Loading measured class results…</p></div></fieldset>
+<p class="annotation">Select a class to focus the confusion matrix. <strong>Recall</strong> answers: of all images belonging to this class, how many did the model find?</p></article>
+<article class="panel panel-pad"><div class="panel-title"><h3>Where predictions go</h3><div class="segmented" role="group" aria-label="Confusion matrix display"><button type="button" data-matrix-mode="count" aria-pressed="true">Counts</button><button type="button" data-matrix-mode="percent" aria-pressed="false">Row %</button></div></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<fieldset data-from-records disabled><legend class="sr-only">Confusion matrix controls</legend><div class="controls"><div class="control"><label for="class-focus">Focus true class</label><select id="class-focus"><option value="3">cat</option></select></div></div>
+<div class="scroll-table" tabindex="0" role="region" aria-label="Scrollable confusion matrix"><table class="matrix" id="confusion-matrix"><caption>Rows: true class. Columns: predicted class.</caption></table></div><p id="matrix-detail" class="matrix-detail" aria-live="polite">Select a cell to inspect its count.</p><ul class="mini-list" id="confusion-list" aria-label="Most frequent errors"></ul></fieldset></article></div>
+<p class="data-note">Accuracy and macro recall are equal here because class support is balanced. A high ROC-AUC measures ranking, not top-1 accuracy. <a href="../docs/classification_metrics.json">Raw metrics</a> · <a href="../docs/classification_metrics.csv" download>Download per-class CSV</a></p></section><section class="section" id="confidence"><div class="section-head"><div><div class="section-title"><span class="section-no">05</span><h2>Confidence has a tradeoff.</h2></div><p class="section-intro">Explore fixed confidence thresholds on the saved test predictions. Accepting fewer images can raise accepted-set accuracy while reducing overall recall.</p></div><span class="badge measured">Measured · descriptive</span></div>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Coverage against accuracy</h3><small>7 RECORDED THRESHOLDS</small></div>
+<fieldset data-from-records disabled><legend class="sr-only">Confidence threshold control</legend><svg class="chart" id="confidence-chart" viewBox="0 0 600 260" role="img" aria-label="Accepted-set accuracy versus test-set coverage"></svg>
+<div class="range-label"><label for="confidence-threshold">Minimum confidence</label><output id="confidence-threshold-label">0%</output></div><input type="range" min="0" max="6" value="0" id="confidence-threshold"></fieldset></article>
+<article class="panel panel-pad"><div class="panel-title"><h3>At this operating point</h3><small>NO MODEL RETRAINING</small></div>
+<div class="compact-stats confidence-stats" style="border-top:0;padding-top:0"><div><b id="confidence-coverage">100.00%</b><span>Images accepted</span></div><div><b id="confidence-accuracy">87.26%</b><span>Accuracy among accepted images</span></div><div><b id="confidence-recall">87.26%</b><span>Overall macro recall</span></div><div><b id="confidence-rejected">0</b><span>Images rejected</span></div></div>
+<p class="equation">Rejected examples count as misses for overall recall. This is not an improvement to the full-test classifier.</p>
+<p class="annotation">Thresholds are descriptive snapshots. A deployment threshold should be chosen on validation data, with a policy for rejected inputs.</p>
+<details><summary>Inspect all seven thresholds</summary><div class="scroll-table"><table id="threshold-table"><caption>Recorded confidence operating points</caption><thead><tr><th>Threshold</th><th>Coverage</th><th>Accuracy</th><th>Recall</th></tr></thead><tbody></tbody></table></div></details></article></div></section><section class="section" id="training"><div class="section-head"><div><div class="section-title"><span class="section-no">04</span><h2>How the replacement learned.</h2></div><p class="section-intro">20 floating-point epochs, followed by 5 epochs of quantization-aware fine-tuning. Checkpoints were selected on validation accuracy.</p></div><span class="badge measured">Recorded training</span></div>
+<div class="grid-asymmetric"><article class="panel panel-pad"><div class="panel-title"><h3>Training trace</h3><div class="control" style="flex:0;min-width:150px"><label class="sr-only" for="training-metric">Training chart metric</label><select id="training-metric"><option value="validation_accuracy">Validation accuracy</option><option value="train_accuracy">Training accuracy</option><option value="loss">Training loss</option></select></div></div>
+<fieldset data-from-records disabled><legend class="sr-only">Training trace controls</legend><svg class="chart" id="training-chart" viewBox="0 0 700 250" role="img" aria-label="Recorded training and quantization-aware fine-tuning curve"></svg>
+<div class="range-label"><label for="epoch-position">Inspect an epoch</label><output id="epoch-label">FP32 · epoch 20</output></div><input type="range" min="0" max="24" value="19" id="epoch-position"></fieldset>
+<dl class="compact-stats"><div><dt class="label">Validation</dt><dd class="mono" id="epoch-validation">89.26%</dd></div><div><dt class="label">Training</dt><dd class="mono" id="epoch-training">91.44%</dd></div><div><dt class="label">Loss</dt><dd class="mono" id="epoch-loss">0.2513</dd></div></dl></article>
+<aside><h3>A fresh model, with a traceable history.</h3><p class="section-intro">The original exported kernels were all zero. They could not be recovered by rescaling. A replacement was trained using the same architecture, with both checkpoints and binary exports saved.</p>
+<ol class="steps"><li><div><strong>45,000 training images</strong><span>Random crops and horizontal flips; seed 42.</span></div></li><li><div><strong>5,000 validation images</strong><span>Deterministic preprocessing for checkpoint selection.</span></div></li><li><div><strong>10,000 untouched test images</strong><span>Used for final evaluation, not checkpoint selection.</span></div></li></ol>
+<p class="annotation"><strong>88.50%</strong> test accuracy for the separate floating-point baseline; <strong>87.26%</strong> for the deployed Q12.4 weights in host C++. The QAT checkpoint contains unrounded master weights (83.10% in FP32); its approximate Q12.4 evaluation is 87.83%. These are different execution modes. QAT is not vendor RTL simulation.</p></aside></div></section></main><footer class="site-footer"><div class="wrap"><div class="footer-inner"><div class="brand">NEUROFORGE <small>/ HLS</small></div><div class="footer-links">
+<a href="../visualizations/viz_performance_comparison.html">Results</a><a href="../visualizations/viz_memory_architecture.html">Memory & tiling</a><a href="../visualizations/viz_decision_framework.html">Toolchain</a><a href="../visualizations/viz_resource_utilization.html">Numeric ranges</a><a href="../visualizations/viz_design_workflow.html">Workflow</a>
+</div></div><div class="footer-bottom"><span>© 2026 Aishik Tokdar · <a href="../LICENSE">MIT License</a></span><span><a href="https://github.com/AishikTokdar/NeuroForge-HLS">Source on GitHub ↗</a> &nbsp; <button class="text-button" id="theme-system" type="button">Use system theme</button></span></div></div></footer></body></html> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->

@@ -1,327 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge-HLS: Memory Architecture Analysis</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
-            font-size: 16px;
-        }
-        .comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .platform {
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .gpu-platform {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border: 2px solid #4CAF50;
-        }
-        .fpga-platform {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border: 2px solid #2196F3;
-        }
-        .platform h2 {
-            margin-top: 0;
-            text-align: center;
-            font-size: 22px;
-        }
-        .architecture-box {
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .arch-title {
-            font-weight: bold;
-            color: #1a1a1a;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .arch-detail {
-            color: #666;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        .metric {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .metric:last-child {
-            border-bottom: none;
-        }
-        .metric-label {
-            color: #666;
-            font-size: 13px;
-        }
-        .metric-value {
-            font-weight: bold;
-            color: #1a1a1a;
-            font-size: 13px;
-        }
-        .bottleneck-callout {
-            background: #fff3e0;
-            border-left: 4px solid #ff9800;
-            padding: 15px 20px;
-            margin-top: 20px;
-            border-radius: 4px;
-        }
-        .bottleneck-callout h3 {
-            margin-top: 0;
-            color: #e65100;
-            font-size: 16px;
-        }
-        .key-insight {
-            background: #f3e5f5;
-            border-left: 4px solid #9c27b0;
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 4px;
-        }
-        .key-insight h3 {
-            margin-top: 0;
-            color: #6a1b9a;
-            font-size: 18px;
-        }
-        .flow-diagram {
-            margin: 30px 0;
-            padding: 20px;
-            background: #fafafa;
-            border-radius: 8px;
-        }
-        .flow-step {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            padding: 12px;
-            background: white;
-            border-radius: 6px;
-            border-left: 4px solid #2196F3;
-        }
-        .step-number {
-            background: #2196F3;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-        .step-text {
-            flex: 1;
-            font-size: 14px;
-            color: #333;
-        }
-        .step-time {
-            color: #666;
-            font-size: 13px;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-    <div style="max-width: 1000px; margin: 0 auto; padding: 20px 20px 0;">
-        <a href="../index.html" style="display: inline-block; padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-family: 'Inter', -apple-system, sans-serif; transition: background 0.2s;">&larr; Back to Home</a>
-    </div>
-    <div class="container">
-        <h1>Memory Architecture: The 2.0× System Memory Overhead</h1>
-        <p class="subtitle">NeuroForge-HLS Memory Bandwidth Analysis | Developed by Aishik Tokdar</p>
-
-        <div class="comparison">
-            <!-- GPU Architecture -->
-            <div class="platform gpu-platform">
-                <h2>🚀 GPU (Tesla T4)</h2>
-                
-                <div class="architecture-box">
-                    <div class="arch-title">Memory Hierarchy</div>
-                    <div class="metric">
-                        <span class="metric-label">L2 Cache</span>
-                        <span class="metric-value">40 MB</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">GDDR6 Memory</span>
-                        <span class="metric-value">16 GB</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Bandwidth</span>
-                        <span class="metric-value">320 GB/s</span>
-                    </div>
-                </div>
-
-                <div class="architecture-box">
-                    <div class="arch-title">Compute Resources</div>
-                    <div class="metric">
-                        <span class="metric-label">CUDA Cores</span>
-                        <span class="metric-value">2,560</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Tensor Cores</span>
-                        <span class="metric-value">320</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Peak FP32</span>
-                        <span class="metric-value">8.1 TFLOPS</span>
-                    </div>
-                </div>
-
-                <div class="architecture-box">
-                    <div class="arch-title">Why It Won</div>
-                    <div class="arch-detail">
-                        ✓ Massive parallel threads hide memory latency<br>
-                        ✓ 320 GB/s bandwidth keeps compute fed<br>
-                        ✓ 40 MB L2 cache holds most parameters<br>
-                        ✓ Optimized CUDA libraries (cuDNN)<br>
-                        ✓ Memory access pattern optimized for CNNs
-                    </div>
-                </div>
-            </div>
-
-            <!-- FPGA Architecture -->
-            <div class="platform fpga-platform">
-                <h2>⚡ FPGA (Zynq-7020)</h2>
-                
-                <div class="architecture-box">
-                    <div class="arch-title">Memory Hierarchy</div>
-                    <div class="metric">
-                        <span class="metric-label">On-chip BRAM</span>
-                        <span class="metric-value">560 KB</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">DDR3 Memory</span>
-                        <span class="metric-value">512 MB</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Bandwidth</span>
-                        <span class="metric-value">~2.1 GB/s</span>
-                    </div>
-                </div>
-
-                <div class="architecture-box">
-                    <div class="arch-title">Compute Resources</div>
-                    <div class="metric">
-                        <span class="metric-label">DSP Slices</span>
-                        <span class="metric-value">220</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">LUTs</span>
-                        <span class="metric-value">53,200</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-label">Clock Speed</span>
-                        <span class="metric-value">66.7 MHz</span>
-                    </div>
-                </div>
-
-                <div class="architecture-box">
-                    <div class="arch-title">The Bottleneck</div>
-                    <div class="arch-detail">
-                        ⚠ Only 560 KB on-chip BRAM<br>
-                        ⚠ 2.8 MB model weights in DDR3<br>
-                        ⚠ Single AXI master (sequential access)<br>
-                        ⚠ 152× slower memory bandwidth<br>
-                        ⚠ Tiled convolution = many DDR round-trips
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="flow-diagram">
-            <h3 style="margin-top: 0; color: #1a1a1a;">FPGA Inference Flow (Single 8×8 Tile)</h3>
-            <div class="flow-step">
-                <div class="step-number">1</div>
-                <div class="step-text">
-                    Fetch 8×8 input tile from DDR3 to BRAM
-                    <div class="step-time">⏱ Memory bound - waiting on DDR</div>
-                </div>
-            </div>
-            <div class="flow-step">
-                <div class="step-number">2</div>
-                <div class="step-text">
-                    Fetch corresponding weights from DDR3
-                    <div class="step-time">⏱ Memory bound - waiting on DDR</div>
-                </div>
-            </div>
-            <div class="flow-step">
-                <div class="step-number">3</div>
-                <div class="step-text">
-                    Compute convolution in FPGA fabric
-                    <div class="step-time">⚡ Fast! DSP slices at work</div>
-                </div>
-            </div>
-            <div class="flow-step">
-                <div class="step-number">4</div>
-                <div class="step-text">
-                    Write output tile back to DDR3
-                    <div class="step-time">⏱ Memory bound - waiting on DDR</div>
-                </div>
-            </div>
-            <div class="flow-step">
-                <div class="step-number">5</div>
-                <div class="step-text">
-                    Repeat for all tiles (32×32 image = hundreds of tiles)
-                    <div class="step-time">🔁 Each iteration stalls on memory</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="bottleneck-callout">
-            <h3>The 2.0× Memory Overhead Explained</h3>
-            <p style="margin: 0; line-height: 1.6; color: #333;">
-                <strong>HLS synthesis predicted:</strong> 12.4 ms minimum fabric compute latency<br>
-                <strong>System-level simulated latency:</strong> 24.8 ms<br>
-                <strong>Gap:</strong> 2.0× overhead due to AXI4 tile transfers<br><br>
-                
-                This overhead is driven by DDR3 memory access latency during 8×8 tile streaming. The FPGA spends 
-                approximately 50% of execution time waiting for DMA data transfers, which is effectively 
-                mitigated by on-chip BRAM ping-pong double buffering.
-            </p>
-        </div>
-
-        <div class="key-insight">
-            <h3>💡 Key Insight: Memory Bandwidth Dominates Everything</h3>
-            <p style="margin: 0; line-height: 1.8; color: #333;">
-                The GPU didn't win because it computed faster — it won because it <em>starved less</em>.<br><br>
-                
-                <strong>GPU advantage:</strong> 320 GB/s ÷ 2.1 GB/s = <strong>152× more memory bandwidth</strong><br><br>
-                
-                For CNN inference, memory access patterns matter more than raw compute power. 
-                The GPU's massive bandwidth and sophisticated caching kept its 2,560 cores fed with data. 
-                The FPGA's 220 DSP slices spent most of their time idle, waiting for the next DDR transfer.
-            </p>
-        </div>
-    </div>
-</body>
-</html>
+<!doctype html>
+<html lang="en" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore the ReducedVGG architecture, Q12.4 arithmetic, measured CIFAR-10 results and verification behind NeuroForge-HLS.">
+<meta name="color-scheme" content="light dark">
+<title>Memory &amp; tiling · NeuroForge-HLS</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="preload" as="fetch" href="../docs/classification_metrics.json" crossorigin data-dataset="metrics"><link rel="preload" as="fetch" href="../docs/training_metrics.json" crossorigin data-dataset="training"><link rel="preload" as="fetch" href="../docs/numeric_range_audit.json" crossorigin data-dataset="ranges"><link rel="preload" as="fetch" href="../docs/weight_validation.json" crossorigin data-dataset="verification">
+<script src="../assets/site.js" defer></script>
+</head><body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap top-inner">
+<a class="brand" href="../index.html" aria-label="NeuroForge-HLS home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>NEUROFORGE <small>/ HLS</small></a>
+<nav class="nav" id="main-nav" aria-label="Main navigation">
+<a href="../index.html#overview">Overview</a><a href="../index.html#architecture">Architecture</a><a href="../index.html#tiling">Lab</a><a href="../index.html#results">Results</a><a href="../index.html#verification">Verification</a><a href="../index.html#project">Project</a>
+</nav>
+<button class="theme-button" id="theme-toggle" type="button" aria-label="Switch to dark mode"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.2A7 7 0 0 1 7.8 3.2 7 7 0 1 0 16.8 12.2Z"/></svg><span id="theme-label">Dark</span></button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<button class="menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+</div></header>
+<main class="wrap" id="main">
+<div id="data-notice" class="data-notice" role="status" hidden><p id="data-message">Recorded results could not be loaded.</p><button class="button" id="retry-data" type="button">Reload results</button></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<noscript><p class="data-notice">JavaScript is needed for the interactive visualizers. The measured summary and project documentation remain available below.</p></noscript>
+<div class="topic-hero"><a class="backlink" href="../index.html">← Project overview</a><h1>Memory &amp; tiling</h1><p>Explore how a 3×3 kernel moves over a feature map, and what the source actually buffers.</p></div><section class="section" id="tiling"><div class="section-head"><div><div class="section-title"><span class="section-no">02</span><h2>A closer look at the kernel.</h2></div><p class="section-intro">Move an output tile across a feature map, then see how a real number becomes a 16-bit fixed-point value.</p></div><span class="badge ">Interactive models</span></div>
+<div class="lab-grid"><article class="panel panel-pad" aria-labelledby="tiling-title"><div class="panel-title"><h3 id="tiling-title">Tile &amp; halo explorer</h3><small>3×3 CONVOLUTION</small></div>
+<div class="controls"><div class="control"><label for="tile-layer">Convolution</label><select id="tile-layer"><option value="0">Block 1 · 32×32</option><option value="1">Block 2 · 16×16</option><option value="2">Block 3 · 8×8</option><option value="3">Block 4 · 4×4</option></select></div><div class="control"><label for="tile-size">Output tile</label><select id="tile-size"><option value="2">2×2</option><option value="4">4×4</option><option value="8" selected>8×8</option></select></div></div>
+<svg class="tile-svg" id="tile-viz" viewBox="0 0 390 260" role="img" aria-label="Selected output tile and one-pixel input halo"></svg>
+<div class="tile-key"><div class="legend"><span><i class="core"></i>Output tile</span><span><i class="halo"></i>Input halo</span></div><span id="tile-coordinate" class="mono" style="font-size:10px">row 0 · col 0</span></div>
+<div class="range-label"><label for="tile-position">Tile position</label><output id="tile-position-label">1 / 16</output></div><input id="tile-position" type="range" min="0" max="15" value="0" aria-describedby="tile-position-label">
+<div class="compact-stats"><div><b id="tile-count">16</b><span>Spatial tiles</span></div><div><b id="tile-buffer">100 × 3</b><span>Input buffer values</span></div><div><b id="tile-reads">5,292</b><span>Valid input reads</span></div></div>
+<p class="annotation">The halo supplies neighboring pixels for the 3×3 kernel. Outside-image values are zero padding. Counts describe the source loop; they are <strong>not measured DDR traffic or FPGA latency</strong>.</p></article>
+<article class="panel panel-pad" id="quantization" aria-labelledby="quant-title"><div class="panel-title"><h3 id="quant-title">Q12.4 workbench</h3><small>16 BITS / 4 FRACTIONAL</small></div>
+<div class="controls"><div class="control"><label for="quant-value">Input value</label><input id="quant-value" type="number" step="0.0001" value="0.1375" min="-1000000" max="1000000" aria-describedby="quant-status"></div><div class="control"><label for="quant-mode">Conversion rule</label><select id="quant-mode"><option value="export">Export · round &amp; clamp</option><option value="activation">Activation · floor &amp; wrap</option></select></div></div>
+<p class="annotation">Resolution <strong>1/16 = 0.0625</strong>. Signed range <strong>−2048 to 2047.9375</strong>. Export uses nearest-even rounding; the hardware type defaults to truncation toward −∞ with wraparound.</p>
+<div class="bitfield" id="quant-bits" role="img" aria-label="16-bit representation"></div><div class="bit-labels"><span>Sign</span><span>11 integer bits</span><span>4 fractional bits</span></div>
+<div class="quant-result"><div><span class="label">Represented value</span><br><strong id="quant-output">0.1250</strong></div><code id="quant-hex">0x0002</code></div><p id="quant-status" class="quant-status" role="status">Error: −0.0125</p>
+<div class="compact-stats"><div><b id="quant-raw">2</b><span>Signed raw integer</span></div><div><b id="quant-error">−0.0125</b><span>Quantization error</span></div><div><b>0.0625</b><span>Step size</span></div></div>
+<p class="annotation">This is a single-value calculation, not model inference. The export and activation rules differ at ties, negative values and overflow. Try <strong>0.03125</strong>, <strong>−0.01</strong> or <strong>2048</strong>.</p>
+</article></div></section><section class="section" id="memory"><div class="section-head"><div><div class="section-title"><span class="section-no">M</span><h2>What is actually buffered?</h2></div><p class="section-intro">Source-level storage sizes using the declared 16-bit feature-map and weight types. Physical memory mapping and replication require synthesis.</p></div><span class="badge ">Calculated · not synthesis</span></div>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Logical buffer allocation</h3><small>215.52 KiB / LISTED ARRAYS</small></div><div class="memory-stack" role="img" aria-label="128 KiB feature maps, 50 KiB input tile, 36 KiB weight tile, and 1.52 KiB other buffers"><span style="width:59.39%"></span><span style="width:23.2%"></span><span style="width:16.7%"></span><span style="width:.71%"></span></div>
+<div class="legend"><span><i class="core"></i>Feature maps</span><span>Input tile</span><span>Weight tile</span></div><p class="annotation">The two full feature-map buffers alternate across layers. Tile buffers supply the current convolution. The source calls layers sequentially; it does not implement concurrent layer streaming.</p></article>
+<div class="scroll-table"><table><caption>Declared array storage, excluding scalar state and tool overhead</caption><thead><tr><th>Buffer</th><th>Elements</th><th>16-bit size</th></tr></thead><tbody>
+<tr><td>Two feature maps</td><td>2 × 32,768</td><td>128 KiB</td></tr><tr><td>Input tile</td><td>256 × 10 × 10</td><td>50 KiB</td></tr><tr><td>Weight tile</td><td>8 × 256 × 3 × 3</td><td>36 KiB</td></tr><tr><td>Output tile</td><td>8 × 8 × 8</td><td>1 KiB</td></tr><tr><td>FC output + tile biases</td><td>256 + 8</td><td>0.52 KiB</td></tr></tbody></table></div></div>
+<p class="annotation">These values are <strong>not BRAM utilization figures</strong>. Bank partitioning, mapping, duplication, widths and scheduling can change physical resource use.</p></section><section class="section" id="ranges"><div class="section-head"><div><div class="section-title"><span class="section-no">06</span><h2>Checking the numeric range.</h2></div><p class="section-intro">Observed values from a separate Q12.4 cast audit over all 10,000 test images. The audit uses FP32 operators with explicit casts and TF32 disabled.</p></div><span class="badge measured">Software range audit</span></div>
+<div class="grid-asymmetric"><article class="panel panel-pad"><div class="panel-title"><h3>Observed layer ranges</h3><div class="control" style="flex:0;min-width:155px"><label class="sr-only" for="range-view">Range audit view</label><select id="range-view"><option value="activations">Pre-cast min / max</option><option value="bounds">Partial-sum bounds</option></select></div></div><div id="range-rows" class="range-rows"><p class="loading">Loading per-layer observations…</p></div><p class="annotation" id="range-description">The scale follows observed values, rather than the full representable range.</p></article>
+<aside><dl class="specs"><div><dt>Q12.4 cast values checked</dt><dd style="font-size:21px">2.49 billion</dd></div><div><dt>Observed cast overflows</dt><dd>0</dd></div><div><dt>Largest partial-sum bound</dt><dd>99.26</dd></div><div><dt>Accumulator magnitude limit</dt><dd>8,388,608</dd></div></dl>
+<p class="annotation">Absolute products plus absolute bias bound the Conv/FC partial sums on these inputs. The observed bound is well below the accumulator limit.</p><p class="annotation"><strong>Scope matters.</strong> This is evidence for the tested images, not a guarantee for arbitrary future inputs. It does not certify AMD fixed-point math, timing or implementation.</p><a class="data-download" href="../docs/numeric_range_audit.json">Inspect the complete range audit ↗</a></aside></div></section></main><footer class="site-footer"><div class="wrap"><div class="footer-inner"><div class="brand">NEUROFORGE <small>/ HLS</small></div><div class="footer-links">
+<a href="../visualizations/viz_performance_comparison.html">Results</a><a href="../visualizations/viz_memory_architecture.html">Memory & tiling</a><a href="../visualizations/viz_decision_framework.html">Toolchain</a><a href="../visualizations/viz_resource_utilization.html">Numeric ranges</a><a href="../visualizations/viz_design_workflow.html">Workflow</a>
+</div></div><div class="footer-bottom"><span>© 2026 Aishik Tokdar · <a href="../LICENSE">MIT License</a></span><span><a href="https://github.com/AishikTokdar/NeuroForge-HLS">Source on GitHub ↗</a> &nbsp; <button class="text-button" id="theme-system" type="button">Use system theme</button></span></div></div></footer></body></html> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->

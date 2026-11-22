@@ -1,366 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge-HLS - Simulation & Modeling</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            
-            /* Accents */
-            --accent-green: #10b981;
-            --accent-orange: #f59e0b;
-            --accent-purple: #8b5cf6;
-            --accent-rose: #f43f5e;
-            --accent-teal: #14b8a6;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            color: white;
-            padding: 100px 20px 120px;
-            text-align: center;
-            border-bottom: 4px solid var(--primary);
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            background: linear-gradient(to right, #60a5fa, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            font-weight: 400;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 1100px;
-            margin: -60px auto 80px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .section-header {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 40px 0 24px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-header span {
-            font-size: 1.75rem;
-        }
-
-        /* Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            border-color: var(--primary);
-        }
-
-        /* Visualization Cards */
-        .viz-card .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
-        .viz-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .viz-card p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            flex-grow: 1;
-            margin-bottom: 24px;
-        }
-
-        .card-link {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card:hover .card-link {
-            color: var(--primary-hover);
-        }
-
-        .card-link::after {
-            content: '→';
-            transition: transform 0.2s;
-        }
-
-        .card:hover .card-link::after {
-            transform: translateX(4px);
-        }
-
-        /* Tool Cards */
-        .tool-card {
-            border-left: 4px solid var(--primary);
-        }
-        .tool-python { border-left-color: var(--accent-green); }
-        .tool-gcc { border-left-color: var(--accent-orange); }
-        .tool-bambu { border-left-color: var(--accent-purple); }
-        .tool-yosys { border-left-color: var(--accent-rose); }
-        .tool-verilator { border-left-color: var(--accent-teal); }
-
-        .tool-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .tool-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-        }
-
-        .badge {
-            background: #f1f5f9;
-            color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        /* CTA Button */
-        .github-cta {
-            display: flex;
-            justify-content: center;
-            margin: 60px 0;
-        }
-
-        .btn-github {
-            background-color: #24292e;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: background-color 0.2s, transform 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-github:hover {
-            background-color: #000000;
-            transform: translateY(-2px);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            background: white;
-        }
-
-        footer p {
-            margin-bottom: 8px;
-        }
-
-        footer strong {
-            color: var(--text-main);
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="hero-content">
-            <h1>NeuroForge-HLS</h1>
-            <p>Interactive visualizations and software documentation for modeling a custom VGG accelerator on CIFAR-10.</p>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container">
-        
-        <!-- Visualizations Section -->
-        <h2 class="section-header"><span>📊</span> Interactive Visualizations</h2>
-        <div class="grid">
-            <a href="visualizations/viz_performance_comparison.html" class="card viz-card">
-                <div class="card-icon">🚀</div>
-                <h3>Performance Comparison</h3>
-                <p>GPU vs HLS Simulation metrics: latency, throughput, power, and energy efficiency.</p>
-                <span class="card-link">Explore Metrics</span>
-            </a>
-
-            <a href="visualizations/viz_memory_architecture.html" class="card viz-card">
-                <div class="card-icon">🧠</div>
-                <h3>Memory Architecture</h3>
-                <p>Deep dive into why GPU's 320 GB/s bandwidth compares to simulated FPGA's 2.1 GB/s.</p>
-                <span class="card-link">Analyze Memory</span>
-            </a>
-
-            <a href="visualizations/viz_decision_framework.html" class="card viz-card">
-                <div class="card-icon">🎯</div>
-                <h3>Decision Framework</h3>
-                <p>Interactive guide for choosing GPU vs FPGA for your Machine Learning project.</p>
-                <span class="card-link">View Framework</span>
-            </a>
-
-            <a href="visualizations/viz_resource_utilization.html" class="card viz-card">
-                <div class="card-icon">⚙️</div>
-                <h3>Resource Optimization</h3>
-                <p>How HLS synthesis optimized hardware resources to achieve a 12.0× theoretical speedup.</p>
-                <span class="card-link">See Resources</span>
-            </a>
-
-            <a href="visualizations/viz_design_workflow.html" class="card viz-card">
-                <div class="card-icon">🛠️</div>
-                <h3>Design Workflow</h3>
-                <p>4-stage software simulation workflow from PyTorch training to HLS synthesis modeling.</p>
-                <span class="card-link">View Workflow</span>
-            </a>
-        </div>
-
-        <!-- Open Source Tools Section -->
-        <h2 class="section-header" style="margin-top: 60px;"><span>🧩</span> Open-Source Toolchain</h2>
-        <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 1.05rem;">
-            NeuroForge-HLS can be deployed and validated using a completely free, 100% open-source software toolchain stack.
-        </p>
-
-        <div class="grid">
-            <div class="card tool-card tool-python">
-                <div class="tool-header">
-                    <h3 class="tool-title">Python 3.8+</h3>
-                    <span class="badge">Training</span>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Used with PyTorch for CNN model training, quantization, and INT16 weight export.</p>
-            </div>
-
-            <div class="card tool-card tool-gcc">
-                <div class="tool-header">
-                    <h3 class="tool-title">GCC / MinGW</h3>
-                    <span class="badge">Simulation</span>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Performs bit-accurate C++ functional hardware simulation without requiring Vitis HLS.</p>
-            </div>
-
-            <div class="card tool-card tool-bambu">
-                <div class="tool-header">
-                    <h3 class="tool-title">Bambu HLS</h3>
-                    <span class="badge">Synthesis</span>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Open-source High-Level Synthesis (HLS) compiler for translating C/C++ to Verilog RTL.</p>
-            </div>
-
-            <div class="card tool-card tool-yosys">
-                <div class="tool-header">
-                    <h3 class="tool-title">Yosys</h3>
-                    <span class="badge">Logic Synthesis</span>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Open-source Verilog RTL logic synthesizer and gate-level resource modeling suite.</p>
-            </div>
-
-            <div class="card tool-card tool-verilator">
-                <div class="tool-header">
-                    <h3 class="tool-title">Verilator</h3>
-                    <span class="badge">Verification</span>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">High-speed open-source cycle-accurate Verilog-to-C++ simulator for RTL verification.</p>
-            </div>
-        </div>
-
-        <div class="github-cta">
-            <a href="https://github.com/AishikTokdar/NeuroForge-HLS" class="btn-github">
-                <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-                </svg>
-                View Full Project on GitHub
-            </a>
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <p><strong>Project:</strong> NeuroForge-HLS: Software Simulation and Modeling of a VGG-16 Accelerator</p>
-        <p><strong>Author:</strong> Aishik Tokdar</p>
-        <p style="margin-top: 16px; font-size: 0.85rem; color: #94a3b8;">&copy; 2026. Released under the MIT License.</p>
-    </footer>
-
-</body>
-</html>
+<!doctype html>
+<html lang="en" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore the ReducedVGG architecture, Q12.4 arithmetic, measured CIFAR-10 results and verification behind NeuroForge-HLS.">
+<meta name="color-scheme" content="light dark">
+<title>A closer look at a CNN accelerator · NeuroForge-HLS</title>
+<script src="./assets/theme.js"></script>
+<link rel="stylesheet" href="./assets/site.css">
+<link rel="preload" as="fetch" href="./docs/classification_metrics.json" crossorigin data-dataset="metrics"><link rel="preload" as="fetch" href="./docs/training_metrics.json" crossorigin data-dataset="training"><link rel="preload" as="fetch" href="./docs/numeric_range_audit.json" crossorigin data-dataset="ranges"><link rel="preload" as="fetch" href="./docs/weight_validation.json" crossorigin data-dataset="verification">
+<script src="./assets/site.js" defer></script>
+</head><body data-root="./">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap top-inner">
+<a class="brand" href="./index.html" aria-label="NeuroForge-HLS home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>NEUROFORGE <small>/ HLS</small></a>
+<nav class="nav" id="main-nav" aria-label="Main navigation">
+<a href="./index.html#overview">Overview</a><a href="./index.html#architecture">Architecture</a><a href="./index.html#tiling">Lab</a><a href="./index.html#results">Results</a><a href="./index.html#verification">Verification</a><a href="./index.html#project">Project</a>
+</nav>
+<button class="theme-button" id="theme-toggle" type="button" aria-label="Switch to dark mode"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.8 12.2A7 7 0 0 1 7.8 3.2 7 7 0 1 0 16.8 12.2Z"/></svg><span id="theme-label">Dark</span></button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<button class="menu-button" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+</div></header>
+<main class="wrap" id="main">
+<div id="data-notice" class="data-notice" role="status" hidden><p id="data-message">Recorded results could not be loaded.</p><button class="button" id="retry-data" type="button">Reload results</button></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<noscript><p class="data-notice">JavaScript is needed for the interactive visualizers. The measured summary and project documentation remain available below.</p></noscript>
+<section class="hero" id="overview"><div>
+<div class="eyebrow"><span class="dot"></span>A CNN accelerator, examined</div>
+<h1>From a 32×32 image<br>to <em>ten class scores.</em></h1>
+<p class="hero-copy">A compact VGG network, trained in PyTorch and implemented as a tiled C++ inference kernel. Explore the architecture, the arithmetic, and the evidence behind the results.</p>
+<div class="actions"><a class="button primary" href="#tiling">Open the visualizers <span aria-hidden="true">↗</span></a><a class="button" href="#results">Inspect the results <span aria-hidden="true">↓</span></a></div>
+<p class="hero-note">CIFAR-10 / ReducedVGG / Zynq-7020 target</p></div>
+<figure class="hero-figure" aria-labelledby="model-caption"><div class="figure-top"><span>MODEL / REDUCEDVGG</span><span>1.44M PARAMETERS</span></div>
+<svg viewBox="0 0 445 255" role="img" aria-label="A 3-channel image passes through four convolution blocks, then a 1024 to 256 to 10 classifier" style="font-family:var(--mono)">
+<text x="55" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">3 CH</text><rect x="18" y="94" width="72" height="72" fill="none" stroke="var(--line)"/><rect x="25" y="101" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="33" y="101" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="41" y="101" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="49" y="101" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="57" y="101" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="65" y="101" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="73" y="101" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="81" y="101" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="25" y="109" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="33" y="109" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="41" y="109" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="49" y="109" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="57" y="109" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="65" y="109" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="73" y="109" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="81" y="109" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="25" y="117" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="33" y="117" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="41" y="117" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="49" y="117" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="57" y="117" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="65" y="117" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="73" y="117" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="81" y="117" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="25" y="125" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="33" y="125" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="41" y="125" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="49" y="125" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="57" y="125" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="65" y="125" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="73" y="125" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="81" y="125" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="25" y="133" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="33" y="133" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="41" y="133" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="49" y="133" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="57" y="133" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="65" y="133" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="73" y="133" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="81" y="133" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="25" y="141" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="33" y="141" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="41" y="141" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="49" y="141" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="57" y="141" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="65" y="141" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="73" y="141" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="81" y="141" width="6" height="6" fill="var(--accent)" opacity="0.48"/><rect x="25" y="149" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="33" y="149" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="41" y="149" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="49" y="149" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="57" y="149" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="65" y="149" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="73" y="149" width="6" height="6" fill="var(--accent)" opacity="0.18"/><rect x="81" y="149" width="6" height="6" fill="var(--accent)" opacity="0.7050000000000001"/><rect x="25" y="157" width="6" height="6" fill="var(--accent)" opacity="0.255"/><rect x="33" y="157" width="6" height="6" fill="var(--accent)" opacity="0.78"/><rect x="41" y="157" width="6" height="6" fill="var(--accent)" opacity="0.5549999999999999"/><rect x="49" y="157" width="6" height="6" fill="var(--accent)" opacity="0.32999999999999996"/><rect x="57" y="157" width="6" height="6" fill="var(--accent)" opacity="0.855"/><rect x="65" y="157" width="6" height="6" fill="var(--accent)" opacity="0.6299999999999999"/><rect x="73" y="157" width="6" height="6" fill="var(--accent)" opacity="0.40499999999999997"/><rect x="81" y="157" width="6" height="6" fill="var(--accent)" opacity="0.18"/>
+<text x="55" y="201" text-anchor="middle" font-size="10" fill="var(--muted)">32×32</text><path d="M102 132h42m-5-4 5 4-5 4" fill="none" stroke="var(--muted)"/>
+<rect x="164" y="75.5" width="43" height="103" fill="var(--soft)" stroke="var(--line)"/><rect x="159" y="80.5" width="43" height="103" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="180" y="57" text-anchor="middle" font-size="12" fill="var(--ink)">32</text><text x="180" y="201" text-anchor="middle" font-size="10" fill="var(--muted)">16×16</text><path d="M207 132h14m-4-3 4 3-4 3" fill="none" stroke="var(--muted)"/><rect x="231" y="87.0" width="43" height="80" fill="var(--soft)" stroke="var(--line)"/><rect x="226" y="92.0" width="43" height="80" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="247" y="57" text-anchor="middle" font-size="12" fill="var(--ink)">64</text><text x="247" y="201" text-anchor="middle" font-size="10" fill="var(--muted)">8×8</text><path d="M274 132h14m-4-3 4 3-4 3" fill="none" stroke="var(--muted)"/><rect x="298" y="97.0" width="43" height="60" fill="var(--soft)" stroke="var(--line)"/><rect x="293" y="102.0" width="43" height="60" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="314" y="57" text-anchor="middle" font-size="12" fill="var(--ink)">128</text><text x="314" y="201" text-anchor="middle" font-size="10" fill="var(--muted)">4×4</text><path d="M341 132h14m-4-3 4 3-4 3" fill="none" stroke="var(--muted)"/><rect x="365" y="106.0" width="43" height="42" fill="var(--soft)" stroke="var(--line)"/><rect x="360" y="111.0" width="43" height="42" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="381" y="57" text-anchor="middle" font-size="12" fill="var(--ink)">256</text><text x="381" y="201" text-anchor="middle" font-size="10" fill="var(--muted)">2×2</text><path d="M180 217v14h220" fill="none" stroke="var(--line)"/><text x="290" y="249" text-anchor="middle" font-size="11" fill="var(--ink)">FLATTEN 1024 → FC 256 → 10 LOGITS</text>
+</svg><figcaption class="figure-caption" id="model-caption">Four blocks. Two convolutions per block. One max pool after each.<br>Schematic dimensions; not physical FPGA placement.</figcaption></figure></section>
+<div class="metric-strip" aria-label="Measured software results">
+<div class="metric"><strong data-summary="accuracy">87.26<small>%</small></strong><span>C++ test accuracy</span></div>
+<div class="metric"><strong data-summary="macro_recall">87.26<small>%</small></strong><span>Macro recall</span></div>
+<div class="metric"><strong>10,000</strong><span>Held-out test images</span></div>
+<div class="metric"><strong>100<small>%</small></strong><span>C++ / PyTorch prediction agreement</span></div></div>
+<div class="status-line"><span><span class="dot"></span> <b>Measured in software.</b> Fixed-point RTL and board deployment remain unverified.</span><span id="data-status">Loading recorded data…</span></div><section class="section" id="architecture"><div class="section-head"><div><div class="section-title"><span class="section-no">01</span><h2>A compact network, end to end.</h2></div><p class="section-intro">Select a stage to inspect its dimensions, parameter count and multiply–accumulate work. Dropout is disabled during inference.</p></div><span class="badge ">Source architecture</span></div>
+<div class="flow" role="group" aria-label="Network stages">
+<button class="layer" type="button" data-layer="0" aria-pressed="true"><span>01 / EXTRACT</span><b>Block 1</b><small>3 → 32 channels</small></button><button class="layer" type="button" data-layer="1" aria-pressed="false"><span>02 / EXTRACT</span><b>Block 2</b><small>32 → 64 channels</small></button><button class="layer" type="button" data-layer="2" aria-pressed="false"><span>03 / EXTRACT</span><b>Block 3</b><small>64 → 128 channels</small></button><button class="layer" type="button" data-layer="3" aria-pressed="false"><span>04 / EXTRACT</span><b>Block 4</b><small>128 → 256 channels</small></button><button class="layer" type="button" data-layer="4" aria-pressed="false"><span>05 / CLASSIFY</span><b>Classifier</b><small>1024 → 256 → 10</small></button> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+</div><div class="layer-detail" aria-live="polite"><div><h3 id="layer-name">Block 1</h3><p id="layer-description">Two 3×3 convolutions, each followed by BatchNorm and ReLU. A 2×2 max pool halves the spatial dimensions.</p><p class="annotation">Layout: channel × height × width. All convolutions use stride 1 and padding 1.</p></div>
+<dl class="specs"><div><dt>Input</dt><dd id="layer-input">3 × 32 × 32</dd></div><div><dt>Output</dt><dd id="layer-output">32 × 16 × 16</dd></div><div><dt>Learned parameters</dt><dd id="layer-params">10,272</dd></div><div><dt>Conv / FC MACs</dt><dd id="layer-macs">10,321,920</dd></div></dl></div>
+<p class="annotation">The complete network has <strong>1,439,146 learned parameters</strong> and <strong>53,053,952 Conv/FC MACs</strong> per image. MAC counts exclude BatchNorm, activation and pooling work.</p></section><section class="section" id="tiling"><div class="section-head"><div><div class="section-title"><span class="section-no">02</span><h2>A closer look at the kernel.</h2></div><p class="section-intro">Move an output tile across a feature map, then see how a real number becomes a 16-bit fixed-point value.</p></div><span class="badge ">Interactive models</span></div>
+<div class="lab-grid"><article class="panel panel-pad" aria-labelledby="tiling-title"><div class="panel-title"><h3 id="tiling-title">Tile &amp; halo explorer</h3><small>3×3 CONVOLUTION</small></div>
+<div class="controls"><div class="control"><label for="tile-layer">Convolution</label><select id="tile-layer"><option value="0">Block 1 · 32×32</option><option value="1">Block 2 · 16×16</option><option value="2">Block 3 · 8×8</option><option value="3">Block 4 · 4×4</option></select></div><div class="control"><label for="tile-size">Output tile</label><select id="tile-size"><option value="2">2×2</option><option value="4">4×4</option><option value="8" selected>8×8</option></select></div></div>
+<svg class="tile-svg" id="tile-viz" viewBox="0 0 390 260" role="img" aria-label="Selected output tile and one-pixel input halo"></svg>
+<div class="tile-key"><div class="legend"><span><i class="core"></i>Output tile</span><span><i class="halo"></i>Input halo</span></div><span id="tile-coordinate" class="mono" style="font-size:10px">row 0 · col 0</span></div>
+<div class="range-label"><label for="tile-position">Tile position</label><output id="tile-position-label">1 / 16</output></div><input id="tile-position" type="range" min="0" max="15" value="0" aria-describedby="tile-position-label">
+<div class="compact-stats"><div><b id="tile-count">16</b><span>Spatial tiles</span></div><div><b id="tile-buffer">100 × 3</b><span>Input buffer values</span></div><div><b id="tile-reads">5,292</b><span>Valid input reads</span></div></div>
+<p class="annotation">The halo supplies neighboring pixels for the 3×3 kernel. Outside-image values are zero padding. Counts describe the source loop; they are <strong>not measured DDR traffic or FPGA latency</strong>.</p></article>
+<article class="panel panel-pad" id="quantization" aria-labelledby="quant-title"><div class="panel-title"><h3 id="quant-title">Q12.4 workbench</h3><small>16 BITS / 4 FRACTIONAL</small></div>
+<div class="controls"><div class="control"><label for="quant-value">Input value</label><input id="quant-value" type="number" step="0.0001" value="0.1375" min="-1000000" max="1000000" aria-describedby="quant-status"></div><div class="control"><label for="quant-mode">Conversion rule</label><select id="quant-mode"><option value="export">Export · round &amp; clamp</option><option value="activation">Activation · floor &amp; wrap</option></select></div></div>
+<p class="annotation">Resolution <strong>1/16 = 0.0625</strong>. Signed range <strong>−2048 to 2047.9375</strong>. Export uses nearest-even rounding; the hardware type defaults to truncation toward −∞ with wraparound.</p>
+<div class="bitfield" id="quant-bits" role="img" aria-label="16-bit representation"></div><div class="bit-labels"><span>Sign</span><span>11 integer bits</span><span>4 fractional bits</span></div>
+<div class="quant-result"><div><span class="label">Represented value</span><br><strong id="quant-output">0.1250</strong></div><code id="quant-hex">0x0002</code></div><p id="quant-status" class="quant-status" role="status">Error: −0.0125</p>
+<div class="compact-stats"><div><b id="quant-raw">2</b><span>Signed raw integer</span></div><div><b id="quant-error">−0.0125</b><span>Quantization error</span></div><div><b>0.0625</b><span>Step size</span></div></div>
+<p class="annotation">This is a single-value calculation, not model inference. The export and activation rules differ at ties, negative values and overflow. Try <strong>0.03125</strong>, <strong>−0.01</strong> or <strong>2048</strong>.</p>
+</article></div></section><section class="section" id="results"><div class="section-head"><div><div class="section-title"><span class="section-no">03</span><h2>Results you can inspect.</h2></div><p class="section-intro">10,000 held-out CIFAR-10 images, 1,000 per class. These are the actual C++ predictions, compared with an independent PyTorch reference.</p></div><span class="badge measured">Measured · software</span></div>
+<dl class="result-summary"><div><dt>Macro precision</dt><dd data-result="macro_precision">87.18%</dd></div><div><dt>Macro F1</dt><dd data-result="macro_f1">87.18%</dd></div><div><dt>Top-3 accuracy</dt><dd>98.00%</dd></div><div><dt>Macro ROC-AUC</dt><dd data-result="macro_roc_auc_ovr">0.99027</dd></div></dl>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Performance by class</h3><small>SUPPORT / 1,000 EACH</small></div>
+<fieldset data-from-records disabled><legend class="sr-only">Class metric controls</legend><div class="controls"><div class="control"><label for="class-metric">Metric</label><select id="class-metric"><option value="recall">Recall</option><option value="precision">Precision</option><option value="f1">F1 score</option></select></div><div class="control"><label for="class-sort">Order</label><select id="class-sort"><option value="class">Class order</option><option value="lowest">Lowest first</option><option value="highest">Highest first</option></select></div></div>
+<div id="class-bars" class="metric-bars" aria-label="Per-class metrics"><p class="loading">Loading measured class results…</p></div></fieldset>
+<p class="annotation">Select a class to focus the confusion matrix. <strong>Recall</strong> answers: of all images belonging to this class, how many did the model find?</p></article>
+<article class="panel panel-pad"><div class="panel-title"><h3>Where predictions go</h3><div class="segmented" role="group" aria-label="Confusion matrix display"><button type="button" data-matrix-mode="count" aria-pressed="true">Counts</button><button type="button" data-matrix-mode="percent" aria-pressed="false">Row %</button></div></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<fieldset data-from-records disabled><legend class="sr-only">Confusion matrix controls</legend><div class="controls"><div class="control"><label for="class-focus">Focus true class</label><select id="class-focus"><option value="3">cat</option></select></div></div>
+<div class="scroll-table" tabindex="0" role="region" aria-label="Scrollable confusion matrix"><table class="matrix" id="confusion-matrix"><caption>Rows: true class. Columns: predicted class.</caption></table></div><p id="matrix-detail" class="matrix-detail" aria-live="polite">Select a cell to inspect its count.</p><ul class="mini-list" id="confusion-list" aria-label="Most frequent errors"></ul></fieldset></article></div>
+<p class="data-note">Accuracy and macro recall are equal here because class support is balanced. A high ROC-AUC measures ranking, not top-1 accuracy. <a href="./docs/classification_metrics.json">Raw metrics</a> · <a href="./docs/classification_metrics.csv" download>Download per-class CSV</a></p></section><section class="section" id="training"><div class="section-head"><div><div class="section-title"><span class="section-no">04</span><h2>How the replacement learned.</h2></div><p class="section-intro">20 floating-point epochs, followed by 5 epochs of quantization-aware fine-tuning. Checkpoints were selected on validation accuracy.</p></div><span class="badge measured">Recorded training</span></div>
+<div class="grid-asymmetric"><article class="panel panel-pad"><div class="panel-title"><h3>Training trace</h3><div class="control" style="flex:0;min-width:150px"><label class="sr-only" for="training-metric">Training chart metric</label><select id="training-metric"><option value="validation_accuracy">Validation accuracy</option><option value="train_accuracy">Training accuracy</option><option value="loss">Training loss</option></select></div></div>
+<fieldset data-from-records disabled><legend class="sr-only">Training trace controls</legend><svg class="chart" id="training-chart" viewBox="0 0 700 250" role="img" aria-label="Recorded training and quantization-aware fine-tuning curve"></svg>
+<div class="range-label"><label for="epoch-position">Inspect an epoch</label><output id="epoch-label">FP32 · epoch 20</output></div><input type="range" min="0" max="24" value="19" id="epoch-position"></fieldset>
+<dl class="compact-stats"><div><dt class="label">Validation</dt><dd class="mono" id="epoch-validation">89.26%</dd></div><div><dt class="label">Training</dt><dd class="mono" id="epoch-training">91.44%</dd></div><div><dt class="label">Loss</dt><dd class="mono" id="epoch-loss">0.2513</dd></div></dl></article>
+<aside><h3>A fresh model, with a traceable history.</h3><p class="section-intro">The original exported kernels were all zero. They could not be recovered by rescaling. A replacement was trained using the same architecture, with both checkpoints and binary exports saved.</p>
+<ol class="steps"><li><div><strong>45,000 training images</strong><span>Random crops and horizontal flips; seed 42.</span></div></li><li><div><strong>5,000 validation images</strong><span>Deterministic preprocessing for checkpoint selection.</span></div></li><li><div><strong>10,000 untouched test images</strong><span>Used for final evaluation, not checkpoint selection.</span></div></li></ol>
+<p class="annotation"><strong>88.50%</strong> test accuracy for the separate floating-point baseline; <strong>87.26%</strong> for the deployed Q12.4 weights in host C++. The QAT checkpoint contains unrounded master weights (83.10% in FP32); its approximate Q12.4 evaluation is 87.83%. These are different execution modes. QAT is not vendor RTL simulation.</p></aside></div></section><section class="section" id="confidence"><div class="section-head"><div><div class="section-title"><span class="section-no">05</span><h2>Confidence has a tradeoff.</h2></div><p class="section-intro">Explore fixed confidence thresholds on the saved test predictions. Accepting fewer images can raise accepted-set accuracy while reducing overall recall.</p></div><span class="badge measured">Measured · descriptive</span></div>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Coverage against accuracy</h3><small>7 RECORDED THRESHOLDS</small></div>
+<fieldset data-from-records disabled><legend class="sr-only">Confidence threshold control</legend><svg class="chart" id="confidence-chart" viewBox="0 0 600 260" role="img" aria-label="Accepted-set accuracy versus test-set coverage"></svg>
+<div class="range-label"><label for="confidence-threshold">Minimum confidence</label><output id="confidence-threshold-label">0%</output></div><input type="range" min="0" max="6" value="0" id="confidence-threshold"></fieldset></article>
+<article class="panel panel-pad"><div class="panel-title"><h3>At this operating point</h3><small>NO MODEL RETRAINING</small></div>
+<div class="compact-stats confidence-stats" style="border-top:0;padding-top:0"><div><b id="confidence-coverage">100.00%</b><span>Images accepted</span></div><div><b id="confidence-accuracy">87.26%</b><span>Accuracy among accepted images</span></div><div><b id="confidence-recall">87.26%</b><span>Overall macro recall</span></div><div><b id="confidence-rejected">0</b><span>Images rejected</span></div></div>
+<p class="equation">Rejected examples count as misses for overall recall. This is not an improvement to the full-test classifier.</p>
+<p class="annotation">Thresholds are descriptive snapshots. A deployment threshold should be chosen on validation data, with a policy for rejected inputs.</p>
+<details><summary>Inspect all seven thresholds</summary><div class="scroll-table"><table id="threshold-table"><caption>Recorded confidence operating points</caption><thead><tr><th>Threshold</th><th>Coverage</th><th>Accuracy</th><th>Recall</th></tr></thead><tbody></tbody></table></div></details></article></div></section><section class="section" id="ranges"><div class="section-head"><div><div class="section-title"><span class="section-no">06</span><h2>Checking the numeric range.</h2></div><p class="section-intro">Observed values from a separate Q12.4 cast audit over all 10,000 test images. The audit uses FP32 operators with explicit casts and TF32 disabled.</p></div><span class="badge measured">Software range audit</span></div>
+<div class="grid-asymmetric"><article class="panel panel-pad"><div class="panel-title"><h3>Observed layer ranges</h3><div class="control" style="flex:0;min-width:155px"><label class="sr-only" for="range-view">Range audit view</label><select id="range-view"><option value="activations">Pre-cast min / max</option><option value="bounds">Partial-sum bounds</option></select></div></div><div id="range-rows" class="range-rows"><p class="loading">Loading per-layer observations…</p></div><p class="annotation" id="range-description">The scale follows observed values, rather than the full representable range.</p></article>
+<aside><dl class="specs"><div><dt>Q12.4 cast values checked</dt><dd style="font-size:21px">2.49 billion</dd></div><div><dt>Observed cast overflows</dt><dd>0</dd></div><div><dt>Largest partial-sum bound</dt><dd>99.26</dd></div><div><dt>Accumulator magnitude limit</dt><dd>8,388,608</dd></div></dl>
+<p class="annotation">Absolute products plus absolute bias bound the Conv/FC partial sums on these inputs. The observed bound is well below the accumulator limit.</p><p class="annotation"><strong>Scope matters.</strong> This is evidence for the tested images, not a guarantee for arbitrary future inputs. It does not certify AMD fixed-point math, timing or implementation.</p><a class="data-download" href="./docs/numeric_range_audit.json">Inspect the complete range audit ↗</a></aside></div></section><section class="section" id="memory"><div class="section-head"><div><div class="section-title"><span class="section-no">M</span><h2>What is actually buffered?</h2></div><p class="section-intro">Source-level storage sizes using the declared 16-bit feature-map and weight types. Physical memory mapping and replication require synthesis.</p></div><span class="badge ">Calculated · not synthesis</span></div>
+<div class="grid-2"><article class="panel panel-pad"><div class="panel-title"><h3>Logical buffer allocation</h3><small>215.52 KiB / LISTED ARRAYS</small></div><div class="memory-stack" role="img" aria-label="128 KiB feature maps, 50 KiB input tile, 36 KiB weight tile, and 1.52 KiB other buffers"><span style="width:59.39%"></span><span style="width:23.2%"></span><span style="width:16.7%"></span><span style="width:.71%"></span></div>
+<div class="legend"><span><i class="core"></i>Feature maps</span><span>Input tile</span><span>Weight tile</span></div><p class="annotation">The two full feature-map buffers alternate across layers. Tile buffers supply the current convolution. The source calls layers sequentially; it does not implement concurrent layer streaming.</p></article>
+<div class="scroll-table"><table><caption>Declared array storage, excluding scalar state and tool overhead</caption><thead><tr><th>Buffer</th><th>Elements</th><th>16-bit size</th></tr></thead><tbody>
+<tr><td>Two feature maps</td><td>2 × 32,768</td><td>128 KiB</td></tr><tr><td>Input tile</td><td>256 × 10 × 10</td><td>50 KiB</td></tr><tr><td>Weight tile</td><td>8 × 256 × 3 × 3</td><td>36 KiB</td></tr><tr><td>Output tile</td><td>8 × 8 × 8</td><td>1 KiB</td></tr><tr><td>FC output + tile biases</td><td>256 + 8</td><td>0.52 KiB</td></tr></tbody></table></div></div>
+<p class="annotation">These values are <strong>not BRAM utilization figures</strong>. Bank partitioning, mapping, duplication, widths and scheduling can change physical resource use.</p></section><section class="section" id="verification"><div class="section-head"><div><div class="section-title"><span class="section-no">07</span><h2>What the evidence establishes.</h2></div><p class="section-intro">A working software pipeline is a useful milestone. Hardware readiness is a separate claim, with separate checks.</p></div><span class="badge ">Verification scope</span></div>
+<dl class="verification-list">
+<div><dt>C++ functional inference</dt><dd>All 10,000 class predictions matched the PyTorch reference. Maximum absolute logit difference: 0.0000190735.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Trained weight exports</dt><dd>FP32, genuine Q16.16 integers and Q12.4 parameters were reloaded and checked. Both model checkpoints and hashes are retained.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Standalone golden vector</dt><dd>A real CIFAR-10 cat image, ten nonzero logits, MSE 2.09894e−12 and 0/10 output errors.</dd><span class="badge measured">Verified</span></div>
+<div><dt>Fixed-point numerical behavior</dt><dd>Quantization-aware evaluation and cast-range audits are approximate software models. Vendor math and default wrap behavior still need direct simulation.</dd><span class="badge">Approximate</span></div>
+<div><dt>RTL, timing and resources</dt><dd>Vitis synthesis, C/RTL co-simulation, routed timing and physical resource reports have not been run. The Zynq-7020 is a target, not a tested deployment.</dd><span class="badge pending">Pending</span></div>
+<div><dt>Board and system integration</dt><dd>No physical board run, measured power, DDR trace or complete board host driver is claimed.</dd><span class="badge pending">Not tested</span></div></dl>
+<p class="annotation"><a href="./README.md#software-verification-and-findings">Read verification details in README ↗</a> · <a href="./README.md#numeric-range-audit">Numeric-range audit in README ↗</a></p>
+</section><section class="section" id="project"><div class="section-head"><div><div class="section-title"><span class="section-no">08</span><h2>The project, beyond the charts.</h2></div><p class="section-intro">NeuroForge-HLS connects a trained image classifier to a hardware-oriented C++ implementation. It is a reproducible software study of that boundary.</p></div><span class="badge ">Project information</span></div>
+<div class="project-grid"><div><h3>A ReducedVGG accelerator study.</h3><p>The network accepts normalized 32×32 RGB images from CIFAR-10 and produces ten class scores. Convolution uses spatial tiles and small output-channel groups, with BatchNorm, ReLU, pooling and fully connected layers implemented in C++.</p><p>The original all-zero weight exports were replaced with a newly trained model. Export formats, quantization checks, golden-vector generation and repeatable validation are included in the repository.</p>
+<dl class="specs"><div><dt>Target device</dt><dd style="font-size:14px">XC7Z020CLG400-1</dd></div><div><dt>Clock constraint</dt><dd style="font-size:14px">15 ns · not closed timing</dd></div><div><dt>Feature / weight type</dt><dd style="font-size:14px">ap_fixed&lt;16,12&gt;</dd></div><div><dt>Accumulator</dt><dd style="font-size:14px">ap_fixed&lt;32,24&gt;</dd></div></dl>
+<p class="annotation">BatchNorm intermediates use ap_fixed&lt;48,24&gt; to keep epsilon representable. The NO_HLS build uses floating-point arithmetic. No browser-side model inference is performed on this site.</p>
+<div class="code-head"><span class="label">Run the host simulation</span><button class="text-button" id="copy-command" type="button">Copy command</button></div><pre class="code-block" id="run-command">python hls/tb_standalone_runner.py</pre><span id="copy-status" class="status-text" role="status"></span></div> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
+<div><h3>Data, checkpoints and reproducibility.</h3><ul class="download-list">
+<li><a href="./weights/reduced_vgg_retrained.pth" download>Quantization-aware checkpoint <span>PYTORCH ↗</span></a></li>
+<li><a href="./weights/reduced_vgg_fp32.pth" download>Floating-point baseline checkpoint <span>PYTORCH ↗</span></a></li>
+<li><a href="./docs/classification_metrics.json" download>Complete classification metrics <span>JSON ↗</span></a></li>
+<li><a href="./docs/classification_metrics.csv" download>Class-level precision, recall and F1 <span>CSV ↗</span></a></li>
+<li><a href="./docs/training_metrics.json" download>Training history and final evaluation <span>JSON ↗</span></a></li>
+<li><a href="./weights/export_manifest.json" download>Checkpoint and export hashes <span>SHA-256 ↗</span></a></li>
+<li><a href="./README.md">Setup and reproduction guide <span>README ↗</span></a></li></ul>
+<p class="annotation"><strong>Author:</strong> Aishik Tokdar. <strong>License:</strong> MIT. CIFAR-10 has 50,000 training and 10,000 test images; this run held out 5,000 training images for validation. <a href="https://www.cs.toronto.edu/~kriz/cifar.html">Dataset source ↗</a></p>
+</div></div></section></main><footer class="site-footer"><div class="wrap"><div class="footer-inner"><div class="brand">NEUROFORGE <small>/ HLS</small></div><div class="footer-links">
+<a href="./visualizations/viz_performance_comparison.html">Results</a><a href="./visualizations/viz_memory_architecture.html">Memory & tiling</a><a href="./visualizations/viz_decision_framework.html">Toolchain</a><a href="./visualizations/viz_resource_utilization.html">Numeric ranges</a><a href="./visualizations/viz_design_workflow.html">Workflow</a>
+</div></div><div class="footer-bottom"><span>© 2026 Aishik Tokdar · <a href="./LICENSE">MIT License</a></span><span><a href="https://github.com/AishikTokdar/NeuroForge-HLS">Source on GitHub ↗</a> &nbsp; <button class="text-button" id="theme-system" type="button">Use system theme</button></span></div></div></footer></body></html> <!-- design-qa: allow BUTTON_NO_ACTION; listeners are registered in assets/site.js -->
